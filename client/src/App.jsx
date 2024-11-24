@@ -3,11 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import client from './utils/apolloClient';
 import Navbar from './components/Layout/Navbar/Navbar';
 import Footer from './components/Layout/Footer/Footer';
-import Home from './pages/Home/Home';
-import MovieDetails from './pages/MovieDetails/MovieDetails';
-import Login from './pages/Login/Login';
-import Signup from './pages/Signup/Signup';
-import UserProfile from './pages/UserProfile/UserProfile';
 
 function App() {
   return (
@@ -16,13 +11,7 @@ function App() {
         <div className="flex flex-col min-h-screen">
           <Navbar />
           <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/movie/:id" element={<MovieDetails />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/profile" element={<UserProfile />} />
-            </Routes>
+            <h1>Welcome to Movie Ratings</h1>
           </main>
           <Footer />
         </div>
