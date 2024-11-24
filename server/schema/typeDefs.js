@@ -1,4 +1,12 @@
 const typeDefs = `#graphql
+  type User {
+    id: ID!
+    username: String!
+    isAdmin: Boolean
+    ratings: [Rating]
+    reviews: [Review]
+  }
+
   type Movie {
     id: ID!
     title: String!
@@ -7,13 +15,7 @@ const typeDefs = `#graphql
     imageSrc: String!
     averageRating: Float
     tmdbId: Int
-    ratings: [Rating]
-    reviews: [Review]
-  }
-
-  type User {
-    id: ID!
-    username: String!
+    voteCount: Int
     ratings: [Rating]
     reviews: [Review]
   }
@@ -25,6 +27,7 @@ const typeDefs = `#graphql
     movieId: ID!
     user: User
     movie: Movie
+    createdAt: String
   }
 
   type Review {
@@ -34,6 +37,7 @@ const typeDefs = `#graphql
     movieId: ID!
     user: User
     movie: Movie
+    createdAt: String
   }
 
   type Auth {
@@ -41,16 +45,48 @@ const typeDefs = `#graphql
     user: User!
   }
 
+  type TMDBMovie {
+    tmdbRating: Float
+    tmdbReviews: [TMDBReview]
+    voteCount: Int
+  }
+
+  type TMDBReview {
+    id: ID!
+    author: String
+    content: String
+  }
+
   type Query {
-    movies(page: Int): [Movie]
-    movie(id: ID!): Movie
     me: User
+    user(id: ID!): User
+    users: [User]
+    movie(id: ID!): Movie
+    movies(page: Int, limit: Int): [Movie]
+    moviesByTitle(title: String!): [Movie]
+    tmdbMovieDetails(tmdbId: Int!): TMDBMovie
   }
 
   type Mutation {
+    # Auth mutations
     login(username: String!, password: String!): Auth
     addUser(username: String!, password: String!): Auth
+    
+    # Movie mutations
+    addMovie(
+      title: String!
+      description: String!
+      releaseYear: Int!
+      imageSrc: String!
+      tmdbId: Int
+    ): Movie
+    
+    # Rating mutations
     addRating(movieId: ID!, rating: Int!): Rating
+    updateRating(ratingId: ID!, rating: Int!): Rating
+    deleteRating(ratingId: ID!): Boolean
+    
+    # Review mutations
     addReview(movieId: ID!, content: String!): Review
     updateReview(reviewId: ID!, content: String!): Review
     deleteReview(reviewId: ID!): Boolean
