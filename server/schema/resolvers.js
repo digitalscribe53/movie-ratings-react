@@ -1,161 +1,344 @@
 const { User, Movie, Rating, Review } = require('../models');
-const { AuthenticationError } = require('@apollo/server');
 const { signToken } = require('../utils/auth');
 const { getMovieDetails } = require('../utils/tmdb');
 const tmdbAPI = require('../utils/tmdb');
+const ErrorHandler = require('../utils/errorHandler');
+const { Op } = require('sequelize');
 
 const resolvers = {
   Query: {
     me: async (_, __, { user }) => {
-      if (!user) throw new AuthenticationError('Not logged in');
-      return await User.findByPk(user.id, {
-        include: [
-          { model: Rating, include: [Movie] },
-          { model: Review, include: [Movie] }
-        ]
-      });
+      if (!user) {
+        throw ErrorHandler.unauthorized('Not logged in');
+      }
+      
+      try {
+        const userData = await User.findByPk(user.id, {
+          include: [
+            { model: Rating, include: [Movie] },
+            { model: Review, include: [Movie] }
+          ]
+        });
+
+        if (!userData) {
+          throw ErrorHandler.notFound('User not found');
+        }
+
+        return userData;
+      } catch (error) {
+        throw ErrorHandler.databaseError('Error fetching user data', error);
+      }
     },
+
     user: async (_, { id }) => {
-      return await User.findByPk(id, {
-        include: [
-          { model: Rating, include: [Movie] },
-          { model: Review, include: [Movie] }
-        ]
-      });
+      try {
+        const userData = await User.findByPk(id, {
+          include: [
+            { model: Rating, include: [Movie] },
+            { model: Review, include: [Movie] }
+          ]
+        });
+
+        if (!userData) {
+          throw ErrorHandler.notFound('User not found');
+        }
+
+        return userData;
+      } catch (error) {
+        throw ErrorHandler.databaseError('Error fetching user data', error);
+      }
     },
+
     users: async () => {
-      return await User.findAll({
-        include: [
-          { model: Rating },
-          { model: Review }
-        ]
-      });
+      try {
+        return await User.findAll({
+          include: [
+            { model: Rating },
+            { model: Review }
+          ]
+        });
+      } catch (error) {
+        throw ErrorHandler.databaseError('Error fetching users', error);
+      }
     },
+
     movie: async (_, { id }) => {
-      return await Movie.findByPk(id, {
-        include: [
-          { model: Rating, include: [User] },
-          { model: Review, include: [User] }
-        ]
-      });
+      try {
+        const movie = await Movie.findByPk(id, {
+          include: [
+            { model: Rating, include: [User] },
+            { model: Review, include: [User] }
+          ]
+        });
+
+        if (!movie) {
+          throw ErrorHandler.notFound('Movie not found');
+        }
+
+        return movie;
+      } catch (error) {
+        throw ErrorHandler.databaseError('Error fetching movie', error);
+      }
     },
+
     movies: async (_, { page = 1, limit = 12 }) => {
-      const offset = (page - 1) * limit;
-      return await Movie.findAll({
-        limit,
-        offset,
-        order: [['createdAt', 'DESC']],
-        include: [Rating, Review]
-      });
+      try {
+        if (page < 1) {
+          throw ErrorHandler.badRequest('Page number must be greater than 0');
+        }
+
+        const offset = (page - 1) * limit;
+        return await Movie.findAll({
+          limit,
+          offset,
+          order: [['createdAt', 'DESC']],
+          include: [Rating, Review]
+        });
+      } catch (error) {
+        throw ErrorHandler.databaseError('Error fetching movies', error);
+      }
     },
+
     moviesByTitle: async (_, { title }) => {
-      return await Movie.findAll({
-        where: {
-          title: {
-            [Op.iLike]: `%${title}%`
-          }
-        },
-        include: [Rating, Review]
-      });
+      if (!title.trim()) {
+        throw ErrorHandler.badRequest('Search title cannot be empty');
+      }
+
+      try {
+        return await Movie.findAll({
+          where: {
+            title: {
+              [Op.iLike]: `%${title}%`
+            }
+          },
+          include: [Rating, Review]
+        });
+      } catch (error) {
+        throw ErrorHandler.databaseError('Error searching movies', error);
+      }
     },
+
     tmdbMovieDetails: async (_, { tmdbId }) => {
-      return await getMovieDetails(tmdbId);
+      try {
+        if (!tmdbId) {
+          throw ErrorHandler.badRequest('TMDB ID is required');
+        }
+        return await getMovieDetails(tmdbId);
+      } catch (error) {
+        throw ErrorHandler.tmdbError('Error fetching TMDB movie details', error);
+      }
     },
+
     searchMovies: async (_, { query, page = 1 }) => {
-      const movies = await tmdbAPI.searchMovies(query, page);
-      return {
-        movies,
-        totalPages: Math.ceil(movies.length / 20), // TMDB returns 20 results per page
-        totalResults: movies.length
-      };
+      if (!query.trim()) {
+        throw ErrorHandler.badRequest('Search query cannot be empty');
+      }
+
+      try {
+        const movies = await tmdbAPI.searchMovies(query, page);
+        return {
+          movies,
+          totalPages: Math.ceil(movies.length / 20),
+          totalResults: movies.length
+        };
+      } catch (error) {
+        throw ErrorHandler.tmdbError('Error searching TMDB movies', error);
+      }
     },
 
     getRecommendations: async (_, { tmdbId, page = 1 }) => {
-      return await tmdbAPI.getRecommendations(tmdbId, page);
+      try {
+        if (!tmdbId) {
+          throw ErrorHandler.badRequest('TMDB ID is required');
+        }
+        return await tmdbAPI.getRecommendations(tmdbId, page);
+      } catch (error) {
+        throw ErrorHandler.tmdbError('Error fetching movie recommendations', error);
+      }
     },
 
     getPopularMovies: async (_, { page = 1 }) => {
-      return await tmdbAPI.getPopularMovies(page);
+      try {
+        return await tmdbAPI.getPopularMovies(page);
+      } catch (error) {
+        throw ErrorHandler.tmdbError('Error fetching popular movies', error);
+      }
     }
   },
+
   Mutation: {
     login: async (_, { username, password }) => {
-      const user = await User.findOne({ where: { username } });
-      if (!user) {
-        throw new AuthenticationError('Incorrect credentials');
-      }
+      try {
+        const user = await User.findOne({ where: { username } });
+        if (!user) {
+          throw ErrorHandler.unauthorized('Invalid credentials');
+        }
 
-      const correctPw = await user.checkPassword(password);
-      if (!correctPw) {
-        throw new AuthenticationError('Incorrect credentials');
-      }
+        const correctPw = await user.checkPassword(password);
+        if (!correctPw) {
+          throw ErrorHandler.unauthorized('Invalid credentials');
+        }
 
-      const token = signToken(user);
-      return { token, user };
+        const token = signToken(user);
+        return { token, user };
+      } catch (error) {
+        if (error.extensions?.code) throw error;
+        throw ErrorHandler.databaseError('Login error', error);
+      }
     },
+
     addUser: async (_, args) => {
-      const user = await User.create(args);
-      const token = signToken(user);
-      return { token, user };
+      try {
+        if (!args.username || !args.password) {
+          throw ErrorHandler.validationError('Username and password are required');
+        }
+
+        if (args.password.length < 6) {
+          throw ErrorHandler.validationError('Password must be at least 6 characters');
+        }
+
+        const existingUser = await User.findOne({ where: { username: args.username } });
+        if (existingUser) {
+          throw ErrorHandler.validationError('Username already exists');
+        }
+
+        const user = await User.create(args);
+        const token = signToken(user);
+        return { token, user };
+      } catch (error) {
+        if (error.extensions?.code) throw error;
+        throw ErrorHandler.databaseError('Error creating user', error);
+      }
     },
+
     addMovie: async (_, args, { user }) => {
       if (!user?.isAdmin) {
-        throw new AuthenticationError('Must be an admin to add movies');
+        throw ErrorHandler.forbidden('Must be an admin to add movies');
       }
-      return await Movie.create(args);
+
+      try {
+        const existingMovie = await Movie.findOne({ where: { title: args.title } });
+        if (existingMovie) {
+          throw ErrorHandler.validationError('Movie already exists');
+        }
+
+        return await Movie.create(args);
+      } catch (error) {
+        if (error.extensions?.code) throw error;
+        throw ErrorHandler.databaseError('Error adding movie', error);
+      }
     },
+
     addRating: async (_, { movieId, rating }, { user }) => {
-      if (!user) throw new AuthenticationError('Must be logged in to rate movies');
-      
-      const [ratingRecord, created] = await Rating.findOrCreate({
-        where: { userId: user.id, movieId },
-        defaults: { rating }
-      });
-
-      if (!created) {
-        await ratingRecord.update({ rating });
+      if (!user) {
+        throw ErrorHandler.unauthorized('Must be logged in to rate movies');
       }
 
-      // Update movie's average rating
-      const ratings = await Rating.findAll({ where: { movieId } });
-      const avgRating = ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length;
-      await Movie.update(
-        { averageRating: avgRating, voteCount: ratings.length },
-        { where: { id: movieId } }
-      );
+      if (rating < 1 || rating > 5) {
+        throw ErrorHandler.validationError('Rating must be between 1 and 5');
+      }
 
-      return ratingRecord;
+      try {
+        const movie = await Movie.findByPk(movieId);
+        if (!movie) {
+          throw ErrorHandler.notFound('Movie not found');
+        }
+
+        const [ratingRecord, created] = await Rating.findOrCreate({
+          where: { userId: user.id, movieId },
+          defaults: { rating }
+        });
+
+        if (!created) {
+          await ratingRecord.update({ rating });
+        }
+
+        const ratings = await Rating.findAll({ where: { movieId } });
+        const avgRating = ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length;
+        await movie.update({
+          averageRating: avgRating,
+          voteCount: ratings.length
+        });
+
+        return ratingRecord;
+      } catch (error) {
+        throw ErrorHandler.databaseError('Error adding rating', error);
+      }
     },
+
     addReview: async (_, { movieId, content }, { user }) => {
-      if (!user) throw new AuthenticationError('Must be logged in to review movies');
-      
-      return await Review.create({
-        movieId,
-        userId: user.id,
-        content
-      });
+      if (!user) {
+        throw ErrorHandler.unauthorized('Must be logged in to review movies');
+      }
+
+      if (!content.trim()) {
+        throw ErrorHandler.validationError('Review content cannot be empty');
+      }
+
+      try {
+        const movie = await Movie.findByPk(movieId);
+        if (!movie) {
+          throw ErrorHandler.notFound('Movie not found');
+        }
+
+        return await Review.create({
+          movieId,
+          userId: user.id,
+          content
+        });
+      } catch (error) {
+        throw ErrorHandler.databaseError('Error adding review', error);
+      }
     },
+
     updateReview: async (_, { reviewId, content }, { user }) => {
-      if (!user) throw new AuthenticationError('Must be logged in to update reviews');
-      
-      const review = await Review.findByPk(reviewId);
-      if (!review || review.userId !== user.id) {
-        throw new AuthenticationError('Cannot update this review');
+      if (!user) {
+        throw ErrorHandler.unauthorized('Must be logged in to update reviews');
       }
-      
-      await review.update({ content });
-      return review;
+
+      if (!content.trim()) {
+        throw ErrorHandler.validationError('Review content cannot be empty');
+      }
+
+      try {
+        const review = await Review.findByPk(reviewId);
+        if (!review) {
+          throw ErrorHandler.notFound('Review not found');
+        }
+
+        if (review.userId !== user.id) {
+          throw ErrorHandler.forbidden('Cannot update another user\'s review');
+        }
+
+        await review.update({ content });
+        return review;
+      } catch (error) {
+        if (error.extensions?.code) throw error;
+        throw ErrorHandler.databaseError('Error updating review', error);
+      }
     },
+
     deleteReview: async (_, { reviewId }, { user }) => {
-      if (!user) throw new AuthenticationError('Must be logged in to delete reviews');
-      
-      const review = await Review.findByPk(reviewId);
-      if (!review || review.userId !== user.id) {
-        throw new AuthenticationError('Cannot delete this review');
+      if (!user) {
+        throw ErrorHandler.unauthorized('Must be logged in to delete reviews');
       }
-      
-      await review.destroy();
-      return true;
+
+      try {
+        const review = await Review.findByPk(reviewId);
+        if (!review) {
+          throw ErrorHandler.notFound('Review not found');
+        }
+
+        if (review.userId !== user.id) {
+          throw ErrorHandler.forbidden('Cannot delete another user\'s review');
+        }
+
+        await review.destroy();
+        return true;
+      } catch (error) {
+        if (error.extensions?.code) throw error;
+        throw ErrorHandler.databaseError('Error deleting review', error);
+      }
     }
   }
 };
