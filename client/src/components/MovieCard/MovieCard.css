@@ -1,0 +1,70 @@
+.movie-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease-in-out;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
+  }
+  
+  .movie-link {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    height: 100%;
+  }
+  
+  .movie-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px rgba(10, 10, 10, 0.2);
+  }
+  
+  .movie-card .card-image {
+    position: relative;
+  }
+  
+  .movie-card .image.is-2by3 {
+    padding-top: 150%;
+    position: relative;
+    width: 100%;
+  }
+  
+  .movie-card .image.is-2by3 img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .movie-card .card-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+  }
+  
+  .movie-card .title {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    line-height: 1.4;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+  }
+  
+  .movie-card .rating {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .movie-card {
+      max-width: 300px;
+      margin: 0 auto;
+    }
+  }

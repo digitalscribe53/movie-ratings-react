@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import client from './utils/apolloClient';
 import Navbar from './components/Layout/Navbar/Navbar';
 import Footer from './components/Layout/Footer/Footer';
+import Home from './pages/Home/Home';
 
 function App() {
   return (
@@ -11,7 +12,9 @@ function App() {
         <div className="flex flex-col min-h-screen">
           <Navbar />
           <main className="flex-grow">
-            <h1>Welcome to Movie Ratings</h1>
+            <Routes>
+              <Route path="/" element={<Home />} />
+            </Routes>
           </main>
           <Footer />
         </div>

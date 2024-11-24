@@ -1,0 +1,35 @@
+.home-container {
+    padding-top: 4rem;
+  }
+  
+  .hero-banner {
+    background-image: url('/images/static/philly-movies-hero-banner.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 4rem 0;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  
+  .hero-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  .hero-banner .container {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .hero-banner #search-form {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+  }
