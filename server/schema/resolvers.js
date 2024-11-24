@@ -2,6 +2,7 @@ const { User, Movie, Rating, Review } = require('../models');
 const { AuthenticationError } = require('@apollo/server');
 const { signToken } = require('../utils/auth');
 const { getMovieDetails } = require('../utils/tmdb');
+const tmdbAPI = require('../utils/tmdb');
 
 const resolvers = {
   Query: {
@@ -59,6 +60,22 @@ const resolvers = {
     },
     tmdbMovieDetails: async (_, { tmdbId }) => {
       return await getMovieDetails(tmdbId);
+    },
+    searchMovies: async (_, { query, page = 1 }) => {
+      const movies = await tmdbAPI.searchMovies(query, page);
+      return {
+        movies,
+        totalPages: Math.ceil(movies.length / 20), // TMDB returns 20 results per page
+        totalResults: movies.length
+      };
+    },
+
+    getRecommendations: async (_, { tmdbId, page = 1 }) => {
+      return await tmdbAPI.getRecommendations(tmdbId, page);
+    },
+
+    getPopularMovies: async (_, { page = 1 }) => {
+      return await tmdbAPI.getPopularMovies(page);
     }
   },
   Mutation: {

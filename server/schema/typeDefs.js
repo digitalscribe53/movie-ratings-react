@@ -20,6 +20,12 @@ const typeDefs = `#graphql
     reviews: [Review]
   }
 
+  type SearchResult {
+    movies: [Movie]!
+    totalPages: Int!
+    totalResults: Int!
+  }
+
   type Rating {
     id: ID!
     rating: Int!
@@ -65,6 +71,9 @@ const typeDefs = `#graphql
     movies(page: Int, limit: Int): [Movie]
     moviesByTitle(title: String!): [Movie]
     tmdbMovieDetails(tmdbId: Int!): TMDBMovie
+    searchMovies(query: String!, page: Int): SearchResult!
+    getRecommendations(tmdbId: Int!, page: Int): [Movie]!
+    getPopularMovies(page: Int): [Movie]!
   }
 
   type Mutation {
