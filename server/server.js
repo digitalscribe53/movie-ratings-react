@@ -4,6 +4,7 @@ const { expressMiddleware } = require('@apollo/server/express4');
 const path = require('path');
 const { typeDefs, resolvers } = require('./schema');
 const db = require('./config/connection');
+const { authMiddleware } = require('./middleware/auth');
 require('dotenv').config();
 
 const PORT = process.env.PORT || 3001;
@@ -23,12 +24,9 @@ async function startServer() {
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
 
-  // Apollo GraphQL endpoint
+  // Apollo GraphQL endpoint with auth middleware
   app.use('/graphql', expressMiddleware(server, {
-    context: async ({ req }) => {
-      // Add authentication context here if needed
-      return {};
-    },
+    context: authMiddleware
   }));
 
   // Sync database and start server
