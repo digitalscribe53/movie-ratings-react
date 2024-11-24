@@ -5,6 +5,7 @@ const path = require('path');
 const { typeDefs, resolvers } = require('./schema');
 const db = require('./config/connection');
 const { authMiddleware } = require('./middleware/auth');
+const cors = require('cors');
 require('dotenv').config();
 
 const PORT = process.env.PORT || 3001;
@@ -21,8 +22,13 @@ async function startServer() {
   await server.start();
 
   // Middleware
+  app.use(cors({
+    origin: 'http://localhost:5173', // Vite's default port
+    credentials: true
+  }));
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
+  
 
   // Apollo GraphQL endpoint with auth middleware
   app.use('/graphql', expressMiddleware(server, {
