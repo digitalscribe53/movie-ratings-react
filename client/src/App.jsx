@@ -4,6 +4,7 @@ import client from './utils/apolloClient';
 import Navbar from './components/Layout/Navbar/Navbar';
 import Footer from './components/Layout/Footer/Footer';
 import Home from './pages/Home/Home';
+import MovieDetails from './pages/MovieDetails/MovieDetails';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/movie/:id" element={<MovieDetails />} />
             </Routes>
           </main>
           <Footer />

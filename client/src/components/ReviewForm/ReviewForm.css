@@ -1,0 +1,13 @@
+.review-form {
+    margin-bottom: 2rem;
+  }
+  
+  .review-form textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+  
+  .review-form textarea:focus {
+    border-color: #485fc7;
+    box-shadow: 0 0 0 0.125em rgba(72, 95, 199, 0.25);
+  }

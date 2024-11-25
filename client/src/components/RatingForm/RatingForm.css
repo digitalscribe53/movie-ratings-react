@@ -1,0 +1,26 @@
+.rating-form {
+    margin-bottom: 2rem;
+  }
+  
+  .stars-container {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .star-button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 0;
+  }
+  
+  .star-button.active {
+    color: gold;
+  }
+  
+  .star-button:hover {
+    transform: scale(1.1);
+  }
