@@ -1,0 +1,35 @@
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    min-width: 300px;
+    max-width: 500px;
+    animation: slideIn 0.3s ease-out;
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  .notification.is-success {
+    background-color: #48c774;
+    color: #fff;
+  }
+  
+  .notification.is-danger {
+    background-color: #f14668;
+    color: #fff;
+  }
+  
+  .notification.is-info {
+    background-color: #3298dc;
+    color: #fff;
+  }

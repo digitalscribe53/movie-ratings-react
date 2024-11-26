@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { gql } from '@apollo/client';
 import './ReviewForm.css';
+import Notification from '../Notification/Notification';
 
 const ADD_REVIEW = gql`
   mutation AddReview($movieId: ID!, $content: String!) {
@@ -18,6 +19,11 @@ const ADD_REVIEW = gql`
 const ReviewForm = ({ movieId, onReviewSubmit }) => {
   const [content, setContent] = useState('');
   const [addReview] = useMutation(ADD_REVIEW);
+  const [notification, setNotification] = useState(null);
+
+  const showNotification = (message, type = 'info') => {
+    setNotification({ message, type });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,15 +38,22 @@ const ReviewForm = ({ movieId, onReviewSubmit }) => {
       });
       setContent('');
       onReviewSubmit && onReviewSubmit();
-      // Could add a success message here
+      showNotification('Review submitted successfully!', 'success');
     } catch (error) {
       console.error('Error submitting review:', error);
-      // Could add error handling UI here
+      showNotification('Failed to submit review. Please try again.', 'danger');
     }
   };
 
   return (
     <div className="review-form">
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification(null)}
+        />
+      )}
       <h3 className="subtitle is-5">Write a Review</h3>
       <form onSubmit={handleSubmit}>
         <div className="field">

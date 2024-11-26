@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { gql } from '@apollo/client';
 import './RatingForm.css';
+import Notification from '../Notification/Notification';
 
 const ADD_RATING = gql`
   mutation AddRating($movieId: ID!, $rating: Int!) {
@@ -19,7 +20,12 @@ const ADD_RATING = gql`
 const RatingForm = ({ movieId, currentRating, onRatingSubmit }) => {
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
+  const [notification, setNotification] = useState(null);
   const [addRating] = useMutation(ADD_RATING);
+
+  const showNotification = (message, type = 'info') => {
+    setNotification({ message, type });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,15 +39,22 @@ const RatingForm = ({ movieId, currentRating, onRatingSubmit }) => {
         }
       });
       onRatingSubmit && onRatingSubmit();
-      // Could add a success message here
+      showNotification('Rating submitted successfully!', 'success');
     } catch (error) {
       console.error('Error submitting rating:', error);
-      // Could add error handling UI here
+      showNotification('Failed to submit rating. Please try again.', 'danger');
     }
   };
 
   return (
     <div className="rating-form">
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification(null)}
+        />
+      )}
       <h3 className="subtitle is-5">Rate this movie</h3>
       <form onSubmit={handleSubmit}>
         <div className="stars-container mb-3">

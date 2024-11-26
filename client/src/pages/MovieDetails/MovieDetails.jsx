@@ -5,6 +5,8 @@ import { useState } from 'react';
 import './MovieDetails.css';
 import RatingForm from '../../components/RatingForm/RatingForm';
 import ReviewForm from '../../components/ReviewForm/ReviewForm';
+import Notification from '../../components/Notification/Notification';
+
 
 const GET_MOVIE_DETAILS = gql`
   query GetMovie($id: ID!) {
@@ -78,6 +80,10 @@ const MovieDetails = () => {
   const [deleteReview] = useMutation(DELETE_REVIEW);
   const [editingReviewId, setEditingReviewId] = useState(null);
   const [editContent, setEditContent] = useState('');
+  const [notification, setNotification] = useState(null);
+  const showNotification = (message, type = 'info') => {
+    setNotification({ message, type });
+  };
 
   // Handler functions
   const handleEditClick = (review) => {
@@ -96,11 +102,13 @@ const MovieDetails = () => {
       setEditingReviewId(null);
       setEditContent('');
       refetch();
+      showNotification('Review updated successfully!', 'success');
     } catch (error) {
       console.error('Error updating review:', error);
+      showNotification('Failed to update review. Please try again.', 'danger');
     }
   };
-
+  
   const handleDeleteReview = async (reviewId) => {
     if (window.confirm('Are you sure you want to delete this review?')) {
       try {
@@ -108,8 +116,10 @@ const MovieDetails = () => {
           variables: { reviewId }
         });
         refetch();
+        showNotification('Review deleted successfully!', 'success');
       } catch (error) {
         console.error('Error deleting review:', error);
+        showNotification('Failed to delete review. Please try again.', 'danger');
       }
     }
   };
@@ -190,6 +200,13 @@ const MovieDetails = () => {
 
   return (
     <div className="movie-details container">
+      {notification && (
+      <Notification
+        message={notification.message}
+        type={notification.type}
+        onClose={() => setNotification(null)}
+      />
+    )}
       <div className="columns">
         {/* Movie Poster */}
         <div className="column is-one-quarter">
