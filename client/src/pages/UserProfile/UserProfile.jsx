@@ -74,8 +74,8 @@ const UserProfile = () => {
   const [notification, setNotification] = useState(null);
   
   const { loading, error, data, refetch } = useQuery(GET_USER_PROFILE, {
-      variables: { ratingsPage, reviewsPage }
-    });
+    variables: { ratingsPage, reviewsPage }
+  });
   const [updateReview] = useMutation(UPDATE_REVIEW);
   const [deleteReview] = useMutation(DELETE_REVIEW);
   const [deleteRating] = useMutation(DELETE_RATING);
@@ -132,7 +132,7 @@ const UserProfile = () => {
     setRatingsPage(newPage);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-  
+
   const handleReviewsPageChange = (newPage) => {
     setReviewsPage(newPage);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -159,7 +159,7 @@ const UserProfile = () => {
 
   return (
     <div className="profile-container container">
-        {notification && (
+      {notification && (
         <Notification
           message={notification.message}
           type={notification.type}
@@ -172,38 +172,48 @@ const UserProfile = () => {
       <section className="section">
         <h2 className="title is-3">My Ratings</h2>
         {user.ratings?.items && user.ratings.items.length > 0 ? (
-  <>
-    <div className="columns is-multiline">
-      {user.ratings.items.map(({ id, rating, createdAt, movie }) => (
-              <div key={id} className="column is-one-quarter-desktop is-half-tablet">
-                <div className="card">
-                  <div className="card-image">
-                    <figure className="image is-2by3">
-                      <img src={movie.imageSrc} alt={movie.title} />
-                    </figure>
-                  </div>
-                  <div className="card-content">
-                    <p className="title is-5">{movie.title}</p>
-                    <p className="subtitle is-6">Your Rating: ⭐ {rating}</p>
-                    <p className="is-size-7 mb-3">
-                      Rated on {new Date(parseInt(createdAt)).toLocaleDateString()}
-                    </p>
-                    <div className="buttons">
-                      <Link to={`/movie/${movie.id}`} className="button is-small is-primary">
-                        View Movie
-                      </Link>
-                      <button 
-                        onClick={() => handleDeleteRating(id)}
-                        className="button is-small is-danger"
-                      >
-                        Delete Rating
-                      </button>
+          <>
+            <div className="columns is-multiline">
+              {user.ratings.items.map(({ id, rating, createdAt, movie }) => (
+                <div key={id} className="column is-one-quarter-desktop is-half-tablet">
+                  <div className="card">
+                    <div className="card-image">
+                      <figure className="image is-2by3">
+                        <img src={movie.imageSrc} alt={movie.title} />
+                      </figure>
+                    </div>
+                    <div className="card-content">
+                      <p className="title is-5">{movie.title}</p>
+                      <p className="subtitle is-6">Your Rating: ⭐ {rating}</p>
+                      <p className="is-size-7 mb-3">
+                        Rated on {new Date(parseInt(createdAt)).toLocaleDateString()}
+                      </p>
+                      <div className="buttons">
+                        <Link to={`/movie/${movie.id}`} className="button is-small is-primary">
+                          View Movie
+                        </Link>
+                        <button 
+                          onClick={() => handleDeleteRating(id)}
+                          className="button is-small is-danger"
+                        >
+                          Delete Rating
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
+              ))}
+            </div>
+            {user.ratings.totalPages > 1 && (
+              <div className="pagination-wrapper mt-6">
+                <Pagination
+                  currentPage={user.ratings.currentPage}
+                  totalPages={user.ratings.totalPages}
+                  onPageChange={handleRatingsPageChange}
+                />
               </div>
-            ))}
-          </div>
+            )}
+          </>
         ) : (
           <p>You haven't rated any movies yet.</p>
         )}
@@ -212,76 +222,87 @@ const UserProfile = () => {
       {/* Reviews Section */}
       <section className="section">
         <h2 className="title is-3">My Reviews</h2>
-        {user.reviews && user.reviews.length > 0 ? (
-          <div className="reviews-container">
-            {user.reviews.map(({ id, content, createdAt, updatedAt, movie }) => (
-              <div key={id} className="box review-box">
-                <div className="columns">
-                  <div className="column is-2">
-                    <figure className="image is-2by3">
-                      <img src={movie.imageSrc} alt={movie.title} />
-                    </figure>
-                  </div>
-                  <div className="column">
-                    <h3 className="title is-4">{movie.title}</h3>
-                    {editingReviewId === id ? (
-                      <div className="edit-review-form">
-                        <textarea
-                          className="textarea"
-                          value={editContent}
-                          onChange={(e) => setEditContent(e.target.value)}
-                        />
-                        <div className="buttons mt-3">
-                          <button
-                            className="button is-primary is-small"
-                            onClick={() => handleEditReview(id)}
-                          >
-                            Save
-                          </button>
-                          <button
-                            className="button is-light is-small"
-                            onClick={() => setEditingReviewId(null)}
-                          >
-                            Cancel
-                          </button>
+        {user.reviews?.items && user.reviews.items.length > 0 ? (
+          <>
+            <div className="reviews-container">
+              {user.reviews.items.map(({ id, content, createdAt, updatedAt, movie }) => (
+                <div key={id} className="box review-box">
+                  <div className="columns">
+                    <div className="column is-2">
+                      <figure className="image is-2by3">
+                        <img src={movie.imageSrc} alt={movie.title} />
+                      </figure>
+                    </div>
+                    <div className="column">
+                      <h3 className="title is-4">{movie.title}</h3>
+                      {editingReviewId === id ? (
+                        <div className="edit-review-form">
+                          <textarea
+                            className="textarea"
+                            value={editContent}
+                            onChange={(e) => setEditContent(e.target.value)}
+                          />
+                          <div className="buttons mt-3">
+                            <button
+                              className="button is-primary is-small"
+                              onClick={() => handleEditReview(id)}
+                            >
+                              Save
+                            </button>
+                            <button
+                              className="button is-light is-small"
+                              onClick={() => setEditingReviewId(null)}
+                            >
+                              Cancel
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    ) : (
-                      <>
-                        <p className="review-content">{content}</p>
-                        <p className="is-size-7 mb-3">
-                          Posted on {new Date(parseInt(createdAt)).toLocaleDateString()}
-                          {createdAt !== updatedAt && 
-                            ` (Edited on ${new Date(parseInt(updatedAt)).toLocaleDateString()})`
-                          }
-                        </p>
-                        <div className="buttons">
-                          <Link to={`/movie/${movie.id}`} className="button is-small is-primary">
-                            View Movie
-                          </Link>
-                          <button
-                            onClick={() => {
-                              setEditingReviewId(id);
-                              setEditContent(content);
-                            }}
-                            className="button is-small is-info"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => handleDeleteReview(id)}
-                            className="button is-small is-danger"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </>
-                    )}
+                      ) : (
+                        <>
+                          <p className="review-content">{content}</p>
+                          <p className="is-size-7 mb-3">
+                            Posted on {new Date(parseInt(createdAt)).toLocaleDateString()}
+                            {createdAt !== updatedAt && 
+                              ` (Edited on ${new Date(parseInt(updatedAt)).toLocaleDateString()})`
+                            }
+                          </p>
+                          <div className="buttons">
+                            <Link to={`/movie/${movie.id}`} className="button is-small is-primary">
+                              View Movie
+                            </Link>
+                            <button
+                              onClick={() => {
+                                setEditingReviewId(id);
+                                setEditContent(content);
+                              }}
+                              className="button is-small is-info"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleDeleteReview(id)}
+                              className="button is-small is-danger"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
+              ))}
+            </div>
+            {user.reviews.totalPages > 1 && (
+              <div className="pagination-wrapper mt-6">
+                <Pagination
+                  currentPage={user.reviews.currentPage}
+                  totalPages={user.reviews.totalPages}
+                  onPageChange={handleReviewsPageChange}
+                />
               </div>
-            ))}
-          </div>
+            )}
+          </>
         ) : (
           <p>You haven't reviewed any movies yet.</p>
         )}
