@@ -1,10 +1,23 @@
 const typeDefs = `#graphql
+
+  type PaginatedRatings {
+    items: [Rating]!
+    totalPages: Int!
+    currentPage: Int!
+  }
+
+  type PaginatedReviews {
+    items: [Review]!
+    totalPages: Int!
+    currentPage: Int!
+  }
+
   type User {
     id: ID!
     username: String!
     isAdmin: Boolean
-    ratings: [Rating]
-    reviews: [Review]
+    ratings(page: Int): PaginatedRatings
+    reviews(page: Int): PaginatedReviews
   }
 
   type Movie {

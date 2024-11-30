@@ -166,6 +166,56 @@ const resolvers = {
     }
   },
 
+  User: {
+    ratings: async (parent, { page = 1 }, context) => {
+      const limit = 12; // Number of ratings per page
+      const offset = (page - 1) * limit;
+
+      const ratings = await Rating.findAndCountAll({
+        where: { userId: parent.id },
+        limit,
+        offset,
+        include: [
+          {
+            model: Movie,
+            attributes: ['id', 'title', 'imageSrc']
+          }
+        ],
+        order: [['createdAt', 'DESC']]
+      });
+
+      return {
+        items: ratings.rows,
+        totalPages: Math.ceil(ratings.count / limit),
+        currentPage: page
+      };
+    },
+
+    reviews: async (parent, { page = 1 }, context) => {
+      const limit = 10; // Number of reviews per page
+      const offset = (page - 1) * limit;
+
+      const reviews = await Review.findAndCountAll({
+        where: { userId: parent.id },
+        limit,
+        offset,
+        include: [
+          {
+            model: Movie,
+            attributes: ['id', 'title', 'imageSrc']
+          }
+        ],
+        order: [['createdAt', 'DESC']]
+      });
+
+      return {
+        items: reviews.rows,
+        totalPages: Math.ceil(reviews.count / limit),
+        currentPage: page
+      };
+    }
+  },
+
   Mutation: {
     login: async (_, { username, password }) => {
       try {
