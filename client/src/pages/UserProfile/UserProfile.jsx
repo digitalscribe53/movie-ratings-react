@@ -4,32 +4,41 @@ import { Link, Navigate } from 'react-router-dom';
 import './UserProfile.css';
 import { useState } from 'react';
 import Notification from '../../components/Notification/Notification';
+import Pagination from '../../components/Pagination/Pagination';
 
 const GET_USER_PROFILE = gql`
-  query GetUserProfile {
+  query GetUserProfile($ratingsPage: Int, $reviewsPage: Int) {
     me {
       id
       username
-      ratings {
-        id
-        rating
-        createdAt
-        movie {
+      ratings(page: $ratingsPage) {
+        items {
           id
-          title
-          imageSrc
+          rating
+          createdAt
+          movie {
+            id
+            title
+            imageSrc
+          }
         }
+        totalPages
+        currentPage
       }
-      reviews {
-        id
-        content
-        createdAt
-        updatedAt
-        movie {
+      reviews(page: $reviewsPage) {
+        items {
           id
-          title
-          imageSrc
+          content
+          createdAt
+          updatedAt
+          movie {
+            id
+            title
+            imageSrc
+          }
         }
+        totalPages
+        currentPage
       }
     }
   }
@@ -58,11 +67,15 @@ const DELETE_RATING = gql`
 `;
 
 const UserProfile = () => {
+  const [ratingsPage, setRatingsPage] = useState(1);
+  const [reviewsPage, setReviewsPage] = useState(1);
   const [editingReviewId, setEditingReviewId] = useState(null);
   const [editContent, setEditContent] = useState('');
   const [notification, setNotification] = useState(null);
-
-  const { loading, error, data } = useQuery(GET_USER_PROFILE);
+  
+  const { loading, error, data, refetch } = useQuery(GET_USER_PROFILE, {
+      variables: { ratingsPage, reviewsPage }
+    });
   const [updateReview] = useMutation(UPDATE_REVIEW);
   const [deleteReview] = useMutation(DELETE_REVIEW);
   const [deleteRating] = useMutation(DELETE_RATING);
@@ -115,6 +128,16 @@ const UserProfile = () => {
     }
   };
 
+  const handleRatingsPageChange = (newPage) => {
+    setRatingsPage(newPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  
+  const handleReviewsPageChange = (newPage) => {
+    setReviewsPage(newPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Check if user is logged in
   if (!localStorage.getItem('id_token')) {
     return <Navigate to="/login" />;
@@ -148,9 +171,10 @@ const UserProfile = () => {
       {/* Ratings Section */}
       <section className="section">
         <h2 className="title is-3">My Ratings</h2>
-        {user.ratings && user.ratings.length > 0 ? (
-          <div className="columns is-multiline">
-            {user.ratings.map(({ id, rating, createdAt, movie }) => (
+        {user.ratings?.items && user.ratings.items.length > 0 ? (
+  <>
+    <div className="columns is-multiline">
+      {user.ratings.items.map(({ id, rating, createdAt, movie }) => (
               <div key={id} className="column is-one-quarter-desktop is-half-tablet">
                 <div className="card">
                   <div className="card-image">
