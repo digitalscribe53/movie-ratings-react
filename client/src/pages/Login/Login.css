@@ -1,0 +1,21 @@
+.auth-container {
+    margin-top: 8rem;
+    padding: 1.5rem;
+  }
+  
+  .box {
+    padding: 2rem;
+  }
+  
+  .field:not(:last-child) {
+    margin-bottom: 1.5rem;
+  }
+  
+  .label {
+    margin-bottom: 0.5rem;
+  }
+  
+  .input:focus {
+    border-color: #485fc7;
+    box-shadow: 0 0 0 0.125em rgba(72, 95, 199, 0.25);
+  }
