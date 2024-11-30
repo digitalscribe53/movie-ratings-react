@@ -3,6 +3,7 @@ import { useQuery, useLazyQuery } from '@apollo/client';
 import { gql } from '@apollo/client';
 import MovieCard from '../../components/MovieCard/MovieCard';
 import Pagination from '../../components/Pagination/Pagination';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import './Home.css';
 
 const GET_MOVIES = gql`
@@ -126,9 +127,7 @@ const Home = () => {
       {/* Movies Grid */}
       <div className="container">
         {loading ? (
-          <div className="has-text-centered">
-            <p>Loading movies...</p>
-          </div>
+          <LoadingSpinner message="Loading movies..." />
         ) : error ? (
           <div className="has-text-centered">
             <p>Error loading movies: {error.message}</p>

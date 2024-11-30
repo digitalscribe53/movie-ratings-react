@@ -1,10 +1,12 @@
 import { useQuery, useMutation } from '@apollo/client';
 import { gql } from '@apollo/client';
 import { Link, Navigate } from 'react-router-dom';
-import './UserProfile.css';
 import { useState } from 'react';
 import Notification from '../../components/Notification/Notification';
 import Pagination from '../../components/Pagination/Pagination';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import './UserProfile.css';
+
 
 const GET_USER_PROFILE = gql`
   query GetUserProfile($ratingsPage: Int, $reviewsPage: Int) {
@@ -143,11 +145,7 @@ const UserProfile = () => {
     return <Navigate to="/login" />;
   }
 
-  if (loading) return (
-    <div className="container has-text-centered">
-      <p>Loading profile...</p>
-    </div>
-  );
+  if (loading) return <LoadingSpinner message="Loading profile..." />;
 
   if (error) return (
     <div className="container has-text-centered">

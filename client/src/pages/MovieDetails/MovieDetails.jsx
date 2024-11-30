@@ -6,6 +6,7 @@ import './MovieDetails.css';
 import RatingForm from '../../components/RatingForm/RatingForm';
 import ReviewForm from '../../components/ReviewForm/ReviewForm';
 import Notification from '../../components/Notification/Notification';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 
 const GET_MOVIE_DETAILS = gql`
@@ -184,11 +185,7 @@ const MovieDetails = () => {
   };
   
 
-  if (loading) return (
-    <div className="container has-text-centered">
-      <p>Loading movie details...</p>
-    </div>
-  );
+  if (loading) return <LoadingSpinner message="Loading movie details..." />;
 
   if (error) return (
     <div className="container has-text-centered">
