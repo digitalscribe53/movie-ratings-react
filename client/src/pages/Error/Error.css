@@ -1,0 +1,17 @@
+.error-container {
+    padding-top: 8rem;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .error-container .title {
+    font-size: 5rem;
+    color: #485fc7;
+  }
+  
+  .error-container .subtitle {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+  }

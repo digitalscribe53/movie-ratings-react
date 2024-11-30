@@ -19,6 +19,7 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
               <Route path="/profile" element={<UserProfile />} />
+              <Route path="*" element={<Error />} /> {/* This catches all unmatched routes */}
             </Routes>
           </main>
           <Footer />
