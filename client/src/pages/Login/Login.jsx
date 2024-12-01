@@ -3,6 +3,7 @@ import { useMutation } from '@apollo/client';
 import { gql } from '@apollo/client';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Notification from '../../components/Notification/Notification';
+import { useAuth } from '../../context/AuthContext';
 import './Login.css';
 
 const LOGIN = gql`
@@ -18,6 +19,7 @@ const LOGIN = gql`
 `;
 
 const Login = () => {
+  const { login: authLogin } = useAuth(); // Add this line to use auth context
   const [formState, setFormState] = useState({
     username: '',
     password: ''
@@ -30,7 +32,7 @@ const Login = () => {
   const params = new URLSearchParams(location.search);
   const redirect = params.get('redirect') || '/';
 
-  const [login] = useMutation(LOGIN);
+  const [loginMutation] = useMutation(LOGIN);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,11 +46,12 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const { data } = await login({
+      const { data } = await loginMutation({
         variables: { ...formState }
       });
 
-      localStorage.setItem('id_token', data.login.token);
+      // Update these lines to use auth context
+      authLogin(data.login.token, data.login.user);
       navigate(redirect);
       
     } catch (error) {
