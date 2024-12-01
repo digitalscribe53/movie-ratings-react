@@ -43,33 +43,4 @@ Rating.init(
   }
 );
 
-// Now let's update models/index.js to include the Rating associations:
-const User = require('./User');
-const Movie = require('./Movie');
-const Rating = require('./Rating');
-
-// User-Rating Association
-User.hasMany(Rating, {
-  foreignKey: 'userId',
-  onDelete: 'CASCADE',
-});
-
-Rating.belongsTo(User, {
-  foreignKey: 'userId',
-});
-
-// Movie-Rating Association
-Movie.hasMany(Rating, {
-  foreignKey: 'movieId',
-  onDelete: 'CASCADE',
-});
-
-Rating.belongsTo(Movie, {
-  foreignKey: 'movieId',
-});
-
-module.exports = {
-  User,
-  Movie,
-  Rating,
-};
+module.exports = Rating;

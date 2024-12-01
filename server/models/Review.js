@@ -15,7 +15,7 @@ Review.init(
       type: DataTypes.TEXT,
       allowNull: false,
       validate: {
-        len: [1, 1000], // Minimum 1 character, maximum 1000 characters
+        len: [1, 1000],
       },
     },
     userId: {
@@ -42,37 +42,4 @@ Review.init(
   }
 );
 
-// Update models/index.js to include Review associations:
-const User = require('./User');
-const Movie = require('./Movie');
-const Rating = require('./Rating');
-const Review = require('./Review');
-
-// Existing Rating associations...
-
-// User-Review Association
-User.hasMany(Review, {
-  foreignKey: 'userId',
-  onDelete: 'CASCADE',
-});
-
-Review.belongsTo(User, {
-  foreignKey: 'userId',
-});
-
-// Movie-Review Association
-Movie.hasMany(Review, {
-  foreignKey: 'movieId',
-  onDelete: 'CASCADE',
-});
-
-Review.belongsTo(Movie, {
-  foreignKey: 'movieId',
-});
-
-module.exports = {
-  User,
-  Movie,
-  Rating,
-  Review,
-};
+module.exports = Review;
