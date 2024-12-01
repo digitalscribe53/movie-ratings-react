@@ -14,8 +14,7 @@ const GET_MOVIES = gql`
       imageSrc
       averageRating
     }
-    totalMovies @client # This will be handled by our server
-    totalPages @client
+    
   }
 `;
 
@@ -25,11 +24,24 @@ const SEARCH_MOVIES = gql`
       movies {
         id
         title
+        description
+        releaseYear
         imageSrc
         averageRating
+        tmdbId
+        voteCount
       }
       totalPages
       totalResults
+    }
+  }
+`;
+
+const GET_ME = gql`
+  query GetMe {
+    me {
+      id
+      username
     }
   }
 `;
@@ -39,14 +51,26 @@ const Home = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Query for initial movies
-  const { loading: loadingMovies, error: moviesError, data: moviesData } = useQuery(GET_MOVIES, {
-    variables: { page: currentPage }
-  });
-
   // Lazy query for search
   const [searchMovies, { loading: searchLoading, error: searchError, data: searchData }] = 
     useLazyQuery(SEARCH_MOVIES);
+
+  // Query for initial movies
+  const { loading: loadingMovies, error: moviesError, data: moviesData } = useQuery(GET_MOVIES, {
+    variables: { page: currentPage }
+  });  
+
+  const loading = loadingMovies || searchLoading;
+  const error = moviesError || searchError;
+  const movies = isSearching ? searchData?.searchMovies.movies : moviesData?.movies;
+
+  const { data: userData } = useQuery(GET_ME, {
+    fetchPolicy: 'network-only'
+  });
+
+  const totalPages = isSearching 
+    ? searchData?.searchMovies.totalPages 
+    : 1; // Default to 1 for now since we removed it from GET_MOVIES query
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -75,9 +99,7 @@ const Home = () => {
     setIsSearching(false);
   };
 
-  const loading = loadingMovies || searchLoading;
-  const error = moviesError || searchError;
-  const movies = isSearching ? searchData?.searchMovies.movies : moviesData?.movies;
+  
 
   return (
     <div className="home-container">
@@ -159,12 +181,12 @@ const Home = () => {
                   ))}
                 </div>
               {/* Pagination */}
-              {totalPages > 1 && (
-                  <div className="pagination-wrapper mt-6">
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={totalPages}
-                      onPageChange={handlePageChange}
+              {movies && movies.length > 0 && totalPages > 1 && (
+    <div className="pagination-wrapper mt-6">
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
                     />
                   </div>
                 )}

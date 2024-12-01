@@ -133,15 +133,17 @@ const resolvers = {
       if (!query.trim()) {
         throw ErrorHandler.badRequest('Search query cannot be empty');
       }
-
+    
       try {
-        const movies = await tmdbAPI.searchMovies(query, page);
+        const tmdbResults = await tmdbAPI.searchMovies(query, page);
+        
         return {
-          movies,
-          totalPages: Math.ceil(movies.length / 20),
-          totalResults: movies.length
+          movies: tmdbResults.results,
+          totalPages: tmdbResults.total_pages,
+          totalResults: tmdbResults.total_results
         };
       } catch (error) {
+        console.error('Search error:', error);
         throw ErrorHandler.tmdbError('Error searching TMDB movies', error);
       }
     },

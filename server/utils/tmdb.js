@@ -79,16 +79,21 @@ const tmdbAPI = {
           page
         }
       });
-
-      return response.data.results.map(movie => ({
-        title: movie.title,
-        description: movie.overview,
-        releaseYear: movie.release_date ? new Date(movie.release_date).getFullYear() : null,
-        imageSrc: movie.poster_path ? `${IMAGE_BASE_URL}${movie.poster_path}` : null,
-        tmdbId: movie.id,
-        averageRating: movie.vote_average / 2,
-        voteCount: movie.vote_count
-      }));
+  
+      return {
+        results: response.data.results.map(movie => ({
+          id: `tmdb-${movie.id}`, // Add this
+          title: movie.title,
+          description: movie.overview || '',
+          releaseYear: movie.release_date ? new Date(movie.release_date).getFullYear() : 0,
+          imageSrc: movie.poster_path ? `${IMAGE_BASE_URL}${movie.poster_path}` : '/default-movie-poster.jpg',
+          averageRating: (movie.vote_average / 2) || 0,
+          tmdbId: movie.id,
+          voteCount: movie.vote_count || 0
+        })),
+        total_pages: response.data.total_pages,
+        total_results: response.data.total_results
+      };
     } catch (error) {
       console.error('Error searching movies:', error);
       throw error;

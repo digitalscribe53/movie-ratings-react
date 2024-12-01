@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { gql } from '@apollo/client';
 import { useState } from 'react'; 
 import './MovieDetails.css';
@@ -10,7 +10,7 @@ import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 
 const GET_MOVIE_DETAILS = gql`
-  query GetMovie($id: ID!) {
+  query GetMovie($id: ID!, $tmdbId: Int) {
     movie(id: $id) {
       id
       title
@@ -18,6 +18,7 @@ const GET_MOVIE_DETAILS = gql`
       releaseYear
       imageSrc
       averageRating
+      tmdbId
       ratings {
         id
         rating
@@ -33,7 +34,7 @@ const GET_MOVIE_DETAILS = gql`
         }
       }
     }
-    tmdbMovieDetails(tmdbId: Int) {
+    tmdbMovieDetails(tmdbId: $tmdbId) {
       tmdbRating
       voteCount
       tmdbReviews {
@@ -70,13 +71,10 @@ const DELETE_REVIEW = gql`
 
 const MovieDetails = () => {
   const { id } = useParams();
-  const { loading, error, data, refetch } = useQuery(GET_MOVIE_DETAILS, {
-    variables: { id }
-  });
+  
 
   // Hooks
-  const { data: userData } = useQuery(GET_ME);
-  const currentUser = userData?.me;
+  
   const [updateReview] = useMutation(UPDATE_REVIEW);
   const [deleteReview] = useMutation(DELETE_REVIEW);
   const [editingReviewId, setEditingReviewId] = useState(null);
@@ -85,6 +83,19 @@ const MovieDetails = () => {
   const showNotification = (message, type = 'info') => {
     setNotification({ message, type });
   };
+
+  // Get current user
+  const { data: userData } = useQuery(GET_ME);
+  const currentUser = userData?.me;
+  const isLoggedIn = !!currentUser;
+
+  const { loading, error, data, refetch } = useQuery(GET_MOVIE_DETAILS, {
+    variables: { 
+      id,
+      tmdbId: data?.movie?.tmdbId // Pass the tmdbId from the movie data
+    },
+    skip: !id
+  });
 
   // Handler functions
   const handleEditClick = (review) => {
