@@ -83,7 +83,7 @@ const typeDefs = `#graphql
     movie(id: ID!): Movie
     movies(page: Int, limit: Int): [Movie]
     moviesByTitle(title: String!): [Movie]
-    tmdbMovieDetails(tmdbId: Int!): TMDBMovie
+    tmdbMovieDetails(tmdbId: Int): TMDBMovie
     searchMovies(query: String!, page: Int): SearchResult!
     getRecommendations(tmdbId: Int!, page: Int): [Movie]!
     getPopularMovies(page: Int): [Movie]!
