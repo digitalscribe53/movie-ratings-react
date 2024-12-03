@@ -18,7 +18,7 @@ const tmdbAPI = {
           }
         }
       );
-
+  
       // Get reviews
       const reviewsResponse = await axios.get(
         `${BASE_URL}/movie/${tmdbId}/reviews`,
@@ -28,19 +28,16 @@ const tmdbAPI = {
           }
         }
       );
-
+  
       return {
+        ...movieResponse.data,
         tmdbRating: movieResponse.data.vote_average,
         tmdbReviews: reviewsResponse.data.results,
         voteCount: movieResponse.data.vote_count
       };
     } catch (error) {
       console.error('Error fetching TMDB movie details:', error);
-      return {
-        tmdbRating: 0,
-        tmdbReviews: [],
-        voteCount: 0
-      };
+      return null;
     }
   },
 

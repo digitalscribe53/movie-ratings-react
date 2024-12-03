@@ -5,6 +5,8 @@ const tmdbAPI = require('../utils/tmdb');
 const ErrorHandler = require('../utils/errorHandler');
 const { Op } = require('sequelize');
 
+const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
+
 const resolvers = {
   Query: {
     me: async (_, __, { user }) => {
@@ -64,19 +66,64 @@ const resolvers = {
 
     movie: async (_, { id }) => {
       try {
+        // If the id starts with 'tmdb-', it's from a search result
+        if (id.startsWith('tmdb-')) {
+          const tmdbId = parseInt(id.replace('tmdb-', ''));
+          
+          // First, try to find the movie by tmdbId
+          let movie = await Movie.findOne({
+            where: { tmdbId },
+            include: [
+              { model: Rating, include: [User] },
+              { model: Review, include: [User] }
+            ]
+          });
+    
+          // If movie doesn't exist in our database, fetch from TMDB and create it
+          if (!movie) {
+            const movieDetails = await tmdbAPI.getMovieDetails(tmdbId);
+            if (!movieDetails) {
+              throw ErrorHandler.notFound('Movie not found on TMDB');
+            }
+    
+            movie = await Movie.create({
+              title: movieDetails.title || '',
+              description: movieDetails.overview || '',
+              releaseYear: movieDetails.release_date ? new Date(movieDetails.release_date).getFullYear() : 0,
+              imageSrc: movieDetails.poster_path ? `${IMAGE_BASE_URL}${movieDetails.poster_path}` : '/default-movie-poster.jpg',
+              averageRating: (movieDetails.vote_average / 2) || 0,
+              tmdbId: tmdbId,
+              voteCount: movieDetails.vote_count || 0
+            });
+    
+            // Fetch associations after creation
+            movie = await Movie.findOne({
+              where: { tmdbId },
+              include: [
+                { model: Rating, include: [User] },
+                { model: Review, include: [User] }
+              ]
+            });
+          }
+    
+          return movie;
+        }
+    
+        // Regular database lookup for seeded movies
         const movie = await Movie.findByPk(id, {
           include: [
             { model: Rating, include: [User] },
             { model: Review, include: [User] }
           ]
         });
-
+    
         if (!movie) {
           throw ErrorHandler.notFound('Movie not found');
         }
-
+    
         return movie;
       } catch (error) {
+        console.error('Movie fetch error:', error);
         throw ErrorHandler.databaseError('Error fetching movie', error);
       }
     },

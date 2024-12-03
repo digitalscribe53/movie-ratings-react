@@ -34,7 +34,7 @@ const GET_MOVIE_DETAILS = gql`
         }
       }
     }
-    tmdbMovieDetails(tmdbId: $tmdbId) {
+    tmdbMovieDetails(tmdbId: $tmdbId) @skip(if: true) {
       tmdbRating
       voteCount
       tmdbReviews {
@@ -47,7 +47,7 @@ const GET_MOVIE_DETAILS = gql`
 
 const GET_ME = gql`
   query GetMe {
-    me {
+    me @optional {
       id
       username
     }
@@ -85,16 +85,23 @@ const MovieDetails = () => {
   };
 
   // Get current user
-  const { data: userData } = useQuery(GET_ME);
+  const { data: userData, error: userError } = useQuery(GET_ME, {
+    onError: () => {} // Ignore auth errors
+  });
   const currentUser = userData?.me;
   const isLoggedIn = !!currentUser;
 
   const { loading, error, data, refetch } = useQuery(GET_MOVIE_DETAILS, {
     variables: { 
       id,
-      tmdbId: data?.movie?.tmdbId // Pass the tmdbId from the movie data
+      tmdbId: null // Initialize as null, update after we have movie data
     },
-    skip: !id
+    onCompleted: (movieData) => {
+      if (movieData?.movie?.tmdbId) {
+        // Refetch with tmdbId once we have it
+        refetch({ id, tmdbId: movieData.movie.tmdbId });
+      }
+    }
   });
 
   // Handler functions
