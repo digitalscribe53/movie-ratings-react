@@ -9,35 +9,39 @@ const tmdbAPI = {
   // Get movie details including rating and reviews
   getMovieDetails: async (tmdbId) => {
     try {
-      // Get basic movie info including rating
-      const movieResponse = await axios.get(
-        `${BASE_URL}/movie/${tmdbId}`,
-        {
-          params: {
+      const [movieResponse, reviewsResponse] = await Promise.all([
+        axios.get(`${BASE_URL}/movie/${tmdbId}`, {
+          params: { api_key: TMDB_API_KEY }
+        }),
+        axios.get(`${BASE_URL}/movie/${tmdbId}/reviews`, {
+          params: { 
             api_key: TMDB_API_KEY,
+            language: 'en-US',
+            page: 1
           }
-        }
-      );
+        })
+      ]);
+
+      console.log('TMDB Reviews Response:', JSON.stringify(reviewsResponse.data, null, 2));
   
-      // Get reviews
-      const reviewsResponse = await axios.get(
-        `${BASE_URL}/movie/${tmdbId}/reviews`,
-        {
-          params: {
-            api_key: TMDB_API_KEY,
-          }
-        }
-      );
+      const reviews = reviewsResponse.data.results.map(review => ({
+        author: review.author,
+        content: review.content,
+        createdAt: review.created_at
+      })).slice(0, 5); // Limit to 5 reviews
   
       return {
         ...movieResponse.data,
         tmdbRating: movieResponse.data.vote_average,
-        tmdbReviews: reviewsResponse.data.results,
+        tmdbReviews: reviews.map(review => ({
+          author: review.author,
+          content: review.content
+        })),  
         voteCount: movieResponse.data.vote_count
       };
     } catch (error) {
       console.error('Error fetching TMDB movie details:', error);
-      return null;
+      throw error;
     }
   },
 

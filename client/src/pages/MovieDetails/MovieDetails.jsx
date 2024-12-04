@@ -10,7 +10,7 @@ import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 
 const GET_MOVIE_DETAILS = gql`
-  query GetMovie($id: ID!, $tmdbId: Int) {
+  query GetMovie($id: ID!, $tmdbId: Int, $skipTmdb: Boolean!) {
     movie(id: $id) {
       id
       title
@@ -34,7 +34,7 @@ const GET_MOVIE_DETAILS = gql`
         }
       }
     }
-    tmdbMovieDetails(tmdbId: $tmdbId) @skip(if: true) {
+    tmdbMovieDetails(tmdbId: $tmdbId) @skip(if: $skipTmdb) {
       tmdbRating
       voteCount
       tmdbReviews {
@@ -47,7 +47,7 @@ const GET_MOVIE_DETAILS = gql`
 
 const GET_ME = gql`
   query GetMe {
-    me @optional {
+    me {
       id
       username
     }
@@ -92,17 +92,21 @@ const MovieDetails = () => {
   const isLoggedIn = !!currentUser;
 
   const { loading, error, data, refetch } = useQuery(GET_MOVIE_DETAILS, {
-    variables: { 
-      id,
-      tmdbId: null // Initialize as null, update after we have movie data
-    },
+    variables: { id,
+      tmdbId: null,
+      skipTmdb: true
+     },
     onCompleted: (movieData) => {
       if (movieData?.movie?.tmdbId) {
-        // Refetch with tmdbId once we have it
-        refetch({ id, tmdbId: movieData.movie.tmdbId });
+        refetch({
+          id,
+          tmdbId: parseInt(movieData.movie.tmdbId),
+          skipTmdb: false
+        });
       }
     }
   });
+  
 
   // Handler functions
   const handleEditClick = (review) => {
@@ -279,21 +283,11 @@ const MovieDetails = () => {
           <div className="reviews-section">
             <h2 className="subtitle is-3">Reviews</h2>
             
-            {/* Local Reviews */}
-            <div className="local-reviews mb-5">
-  <h3 className="subtitle is-4">Movie Ratings App Reviews</h3>
-  {movie.reviews && movie.reviews.length > 0 ? (
-    <div className="reviews-list">
-      {movie.reviews.map(review => renderReview(review))}
-    </div>
-  ) : (
-    <p>No reviews yet. Be the first to review!</p>
-  )}
-</div>
+            
 
             {/* TMDB Reviews */}
             {data.tmdbMovieDetails?.tmdbReviews && (
-              <div className="tmdb-reviews">
+              <div className="tmdb-reviews mt-4">
                 <h3 className="subtitle is-4">TMDB Reviews</h3>
                 <div className="reviews-list">
                   {data.tmdbMovieDetails.tmdbReviews.map((review, index) => (
@@ -307,6 +301,18 @@ const MovieDetails = () => {
                 </div>
               </div>
             )}
+
+            {/* Local Reviews */}
+            <div className="local-reviews mb-5">
+  <h3 className="subtitle is-4">Movie Ratings App Reviews</h3>
+  {movie.reviews && movie.reviews.length > 0 ? (
+    <div className="reviews-list">
+      {movie.reviews.map(review => renderReview(review))}
+    </div>
+  ) : (
+    <p>No reviews yet. Be the first to review!</p>
+  )}
+</div>
 
             {/* Rating and Review Forms for logged-in users */}
             
