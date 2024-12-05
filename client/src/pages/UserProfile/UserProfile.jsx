@@ -1,7 +1,8 @@
 import { useQuery, useMutation } from '@apollo/client';
 import { gql } from '@apollo/client';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import Notification from '../../components/Notification/Notification';
 import Pagination from '../../components/Pagination/Pagination';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
@@ -9,8 +10,8 @@ import './UserProfile.css';
 
 
 const GET_USER_PROFILE = gql`
-  query GetUserProfile($ratingsPage: Int, $reviewsPage: Int) {
-    me {
+  query GetUser($userId: ID!, $ratingsPage: Int, $reviewsPage: Int) {
+    user(id: $userId) {
       id
       username
       ratings(page: $ratingsPage) {
@@ -32,7 +33,6 @@ const GET_USER_PROFILE = gql`
           id
           content
           createdAt
-          updatedAt
           movie {
             id
             title
@@ -69,6 +69,8 @@ const DELETE_RATING = gql`
 `;
 
 const UserProfile = () => {
+  const { id } = useParams();
+  const { user: currentUser } = useAuth();
   const [ratingsPage, setRatingsPage] = useState(1);
   const [reviewsPage, setReviewsPage] = useState(1);
   const [editingReviewId, setEditingReviewId] = useState(null);
@@ -76,8 +78,16 @@ const UserProfile = () => {
   const [notification, setNotification] = useState(null);
   
   const { loading, error, data, refetch } = useQuery(GET_USER_PROFILE, {
-    variables: { ratingsPage, reviewsPage }
+    variables: { 
+      userId: id || '',  // Ensure we always pass a value
+      ratingsPage, 
+      reviewsPage 
+    },
+    skip: !id  // Skip the query if we don't have an ID
   });
+
+  const isOwnProfile = currentUser?.id === id;
+  
   const [updateReview] = useMutation(UPDATE_REVIEW);
   const [deleteReview] = useMutation(DELETE_REVIEW);
   const [deleteRating] = useMutation(DELETE_RATING);
@@ -153,7 +163,7 @@ const UserProfile = () => {
     </div>
   );
 
-  const { me: user } = data;
+  const { user } = data;
 
   return (
     <div className="profile-container container">
@@ -164,7 +174,9 @@ const UserProfile = () => {
           onClose={() => setNotification(null)}
         />
       )}
-      <h1 className="title is-2">{user.username}'s Profile</h1>
+      <h1 className="title is-2">
+        {isOwnProfile ? 'My Profile' : `${user.username}'s Profile`}
+      </h1>
 
       {/* Ratings Section */}
       <section className="section">
@@ -184,18 +196,20 @@ const UserProfile = () => {
                       <p className="title is-5">{movie.title}</p>
                       <p className="subtitle is-6">Your Rating: ⭐ {rating}</p>
                       <p className="is-size-7 mb-3">
-                        Rated on {new Date(parseInt(createdAt)).toLocaleDateString()}
+                        Posted on {new Date(parseInt(createdAt)).toLocaleDateString()}
                       </p>
                       <div className="buttons">
                         <Link to={`/movie/${movie.id}`} className="button is-small is-primary">
                           View Movie
                         </Link>
-                        <button 
-                          onClick={() => handleDeleteRating(id)}
-                          className="button is-small is-danger"
-                        >
-                          Delete Rating
-                        </button>
+                        {isOwnProfile && (
+        <button 
+          onClick={() => handleDeleteRating(id)}
+          className="button is-small is-danger"
+        >
+          Delete Rating
+        </button>
+      )}
                       </div>
                     </div>
                   </div>

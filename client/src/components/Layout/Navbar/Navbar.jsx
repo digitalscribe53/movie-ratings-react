@@ -1,15 +1,12 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../../context/AuthContext';
 import './Navbar.css';
 
 const Navbar = () => {
-  const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('id_token'));
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
-    localStorage.removeItem('id_token');
-    setIsLoggedIn(false);
-    navigate('/');
+    logout(); // The navigation is already handled in AuthContext
   };
 
   return (
@@ -32,23 +29,30 @@ const Navbar = () => {
 
       <div className="navbar-end">
         <div className="navbar-item">
-          {isLoggedIn ? (
-            <>
-              <Link to="/profile" className="nav-link mr-4">
-                My Ratings
-              </Link>
+          {user ? (
+            <div className="buttons">
+              <Link 
+  to={`/profile/${user.id}`} 
+  className="button is-light mr-2"
+>
+  My Profile
+</Link>
               <button 
                 onClick={handleLogout} 
-                className="nav-link"
-                style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+                className="button is-primary"
               >
-                Logout
+                Log Out
               </button>
-            </>
+            </div>
           ) : (
-            <Link to="/login" className="nav-link">
-              Log in
-            </Link>
+            <div className="buttons">
+              <Link to="/signup" className="button is-primary">
+                <strong>Sign up</strong>
+              </Link>
+              <Link to="/login" className="button is-light">
+                Log in
+              </Link>
+            </div>
           )}
         </div>
       </div>
