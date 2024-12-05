@@ -1,5 +1,5 @@
 const { User, Movie, Rating, Review } = require('../models');
-const { signToken } = require('../utils/auth');
+const { signToken, checkAuth } = require('../utils/auth');
 const { getMovieDetails } = require('../utils/tmdb');
 const tmdbAPI = require('../utils/tmdb');
 const ErrorHandler = require('../utils/errorHandler');
