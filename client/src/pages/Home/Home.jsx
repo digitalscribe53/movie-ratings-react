@@ -147,7 +147,7 @@ const Home = () => {
       </div>
 
       {/* Movies Grid */}
-      <div className="container">
+      <div className="container px-4">
         {loading ? (
           <LoadingSpinner message="Loading movies..." />
         ) : error ? (
@@ -173,9 +173,9 @@ const Home = () => {
                     Found {searchData?.searchMovies.totalResults} results for "{searchTerm}"
                   </p>
                 )}
-                <div className="columns is-multiline">
+                <div className="columns is-multiline is-2">
                   {movies?.map((movie) => (
-                    <div key={movie.id} className="column is-one-quarter-desktop is-6-tablet is-12-mobile">
+                    <div key={movie.id} className="column is-3-desktop is-4-tablet is-6-mobile">
                       <MovieCard movie={movie} />
                     </div>
                   ))}
