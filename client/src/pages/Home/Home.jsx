@@ -68,9 +68,12 @@ const Home = () => {
     fetchPolicy: 'network-only'
   });
 
+  console.log('Movies data:', movies?.length, movies);
+
   const totalPages = isSearching 
     ? searchData?.searchMovies.totalPages 
     : 1; // Default to 1 for now since we removed it from GET_MOVIES query
+
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -106,48 +109,44 @@ const Home = () => {
       {/* Hero Section with Search */}
       <div className="hero-banner">
         <div className="container">
-          <div className="columns is-centered">
-            <div className="column is-half">
-              <form onSubmit={handleSearch} className="mb-5">
-                <div className="field has-addons">
-                  <div className="control is-expanded">
-                    <input 
-                      className="input is-medium"
-                      type="text"
-                      placeholder="Search for movies..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                  <div className="control">
-                    <button 
-                      type="submit" 
-                      className={`button is-primary is-medium ${loading ? 'is-loading' : ''}`}
-                      disabled={loading}
-                    >
-                      Search
-                    </button>
-                  </div>
-                  {isSearching && (
-                    <div className="control">
-                      <button 
-                        type="button" 
-                        className="button is-light is-medium"
-                        onClick={handleClearSearch}
-                      >
-                        Clear
-                      </button>
-                    </div>
-                  )}
+          <form onSubmit={handleSearch} className="search-form">
+            <div className="field has-addons">
+              <div className="control is-expanded">
+                <input 
+                  className="input is-medium"
+                  type="text"
+                  placeholder="Search for movies..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <div className="control">
+                <button 
+                  type="submit" 
+                  className={`button is-primary is-medium ${loading ? 'is-loading' : ''}`}
+                  disabled={loading}
+                >
+                  Search
+                </button>
+              </div>
+              {isSearching && (
+                <div className="control">
+                  <button 
+                    type="button" 
+                    className="button is-light is-medium"
+                    onClick={handleClearSearch}
+                  >
+                    Clear
+                  </button>
                 </div>
-              </form>
+              )}
             </div>
-          </div>
+          </form>
         </div>
       </div>
-
+  
       {/* Movies Grid */}
-      <div className="container">
+      <div className="container mt-4">
         {loading ? (
           <LoadingSpinner message="Loading movies..." />
         ) : error ? (
@@ -173,20 +172,20 @@ const Home = () => {
                     Found {searchData?.searchMovies.totalResults} results for "{searchTerm}"
                   </p>
                 )}
-                <div className="columns is-multiline is-variable is-2">
+                <div className="columns is-multiline is-mobile m-0">
                   {movies?.map((movie) => (
-                    <div key={movie.id} className="column is-3-desktop is-4-tablet is-6-mobile style={{ display: 'flex', justifyContent: 'center' }}">
+                    <div key={movie.id} className="column is-3-desktop is-4-tablet is-6-mobile p-2">
                       <MovieCard movie={movie} />
                     </div>
                   ))}
                 </div>
-              {/* Pagination */}
-              {movies && movies.length > 0 && totalPages > 1 && (
-    <div className="pagination-wrapper mt-6">
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="pagination-wrapper mt-6">
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      onPageChange={handlePageChange}
                     />
                   </div>
                 )}
@@ -197,6 +196,5 @@ const Home = () => {
       </div>
     </div>
   );
-};
-
+}
 export default Home;

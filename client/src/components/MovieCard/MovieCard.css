@@ -1,20 +1,28 @@
 .movie-card {
   display: flex;
   flex-direction: column;
-  margin: 0.5rem;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background: white;
   width: 100%;
-  max-width: 220px; /* Add maximum width */
-  margin: 0 auto; /* Center the card */
+  max-width: 220px;
+  margin: 0 auto;
+  transition: transform 0.2s ease;
+}
+
+.movie-link {
+  display: inline-block; /* Change to inline-block */
+  text-decoration: none;
+  color: inherit;
+  width: auto; /* Change from fit-content */
+  margin: 0 auto;
 }
 
 .card-image {
   position: relative;
   width: 100%;
-  padding-bottom: 150%; /* Maintains 2:3 ratio */
+  padding-bottom: 150%; /* Maintain 2:3 ratio */
 }
 
 .card-image img {
