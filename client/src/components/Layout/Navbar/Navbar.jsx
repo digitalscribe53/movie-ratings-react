@@ -10,13 +10,9 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar is-fixed-top" role="navigation" aria-label="main navigation">
-      <Link to="/" className="navbar-item nav-link">
-        Home
-      </Link>
-
-      <div className="navbar-brand is-flex-grow-1">
-        <div className="navbar-item site-title-container">
+    <nav className="navbar" role="navigation" aria-label="main navigation">
+      <div className="navbar-brand">
+        <Link to="/" className="site-title-container">
           <span className="site-title">Movie Ratings</span>
           <span className="powered-by">POWERED BY</span>
           <img 
@@ -24,37 +20,28 @@ const Navbar = () => {
             alt="TMDB Logo" 
             className="tmdb-logo"
           />
-        </div>
+        </Link>
       </div>
 
-      <div className="navbar-end">
-        <div className="navbar-item">
-          {user ? (
-            <div className="buttons">
-              <Link 
-  to={`/profile/${user.id}`} 
-  className="button is-light mr-2"
->
-  My Profile
-</Link>
-              <button 
-                onClick={handleLogout} 
-                className="button is-primary"
-              >
-                Log Out
-              </button>
-            </div>
-          ) : (
-            <div className="buttons">
-              <Link to="/signup" className="button is-primary">
-                <strong>Sign up</strong>
-              </Link>
-              <Link to="/login" className="button is-light">
-                Log in
-              </Link>
-            </div>
-          )}
-        </div>
+      <div className="auth-links">
+        {user ? (
+          <>
+            <Link to={`/profile/${user.id}`} className="nav-link">
+              Profile
+            </Link>
+            <button 
+              onClick={logout} 
+              className="nav-link"
+              style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+            >
+              Log Out
+            </button>
+          </>
+        ) : (
+          <Link to="/login" className="nav-link">
+            Log in or Sign up
+          </Link>
+        )}
       </div>
     </nav>
   );

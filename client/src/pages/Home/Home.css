@@ -23,7 +23,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .hero-banner .container {
@@ -35,8 +35,8 @@
 }
 
 .search-form {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0.5rem; 
   border-radius: 8px;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
   width: 100%;
@@ -44,17 +44,40 @@
   margin: 0 auto;
 }
 
+.field.has-addons {
+  margin: 0;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  width: 60%;
+  gap: 2px;
+}
+
+.field.has-addons .control {
+  margin: 0;
+}
+
+.field.has-addons .control.is-expanded {
+  flex-grow: 1;
+  max-width: 400px;
+}
+
 .search-form .field {
   width: 100%;
 }
 
 .search-form .input {
-  height: 3.5rem !important;
+  height: 3rem !important;
   font-size: 1.2rem !important;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  width: 100%;
 }
 
 .search-form .button {
-  height: 3.5rem !important;
+  height: 3rem !important;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 /* Movies Grid */
