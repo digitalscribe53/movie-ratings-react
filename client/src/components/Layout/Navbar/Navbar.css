@@ -1,5 +1,5 @@
 .navbar {
-    padding: 0.5rem 2rem;
+    padding: 0.5rem 1rem;
     min-height: 4rem;
     background-color: white;
     width: 100%;
@@ -17,7 +17,7 @@
     flex: 1;
     display: flex;
     justify-content: flex-start;
-    padding-left: 2rem;
+    padding-left: 1rem;
 }
 
 .site-title-container {
@@ -31,7 +31,6 @@
     font-family: 'Oooh Baby', cursive;
     font-size: 3rem; 
     color: #363636;
-    text-align: center;
     white-space: nowrap;
 }
 
@@ -41,6 +40,7 @@
     text-transform: uppercase;
     letter-spacing: 0.03em;
     font-weight: normal;
+    white-space: nowrap;
 }
 
 .tmdb-logo {
@@ -64,13 +64,13 @@
 
 .auth-links {
     display: flex;
-    padding-right: 2rem;
+    padding-right: 1rem;
 }
 
 /* Responsive Styles */
 @media screen and (max-width: 1023px) {
     .site-title {
-        font-size: 1.8rem;
+        font-size: 2.3rem;
     }
     
     .powered-by {
@@ -78,13 +78,13 @@
     }
     
     .tmdb-logo {
-        height: 1.8rem;
+        height: 1.5rem;
     }
 }
 
 @media screen and (max-width: 768px) {
     .site-title {
-        font-size: 1.4rem;
+        font-size: 1.8rem;
     }
     
     .powered-by {
@@ -92,7 +92,7 @@
     }
     
     .tmdb-logo {
-        height: 1.4rem;
+        height: 1.3rem;
     }
 
     .navbar {
@@ -102,5 +102,23 @@
     .nav-link {
         font-size: 1rem;
         padding: 0.5rem;
+    }
+
+    .auth-links {
+        padding-right: 0.5rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .site-title {
+        font-size: 1.5rem;
+    }
+
+    .powered-by {
+        font-size: 0.5rem;
+    }
+
+    .tmdb-logo {
+        height: 1.1rem;
     }
 }
