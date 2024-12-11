@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import './MovieCard.css';
 
+// MovieCard.jsx
 const MovieCard = ({ movie }) => {
   const { id, title, imageSrc, averageRating } = movie;
 
   return (
-    <Link to={`/movie/${id}`}>
-      <div className="movie-card">
+    <div className="movie-card-container">
+      <Link to={`/movie/${id}`} className="movie-card">
         <div className="card-image">
           <img 
             src={imageSrc} 
@@ -27,8 +28,8 @@ const MovieCard = ({ movie }) => {
             )}
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };
 

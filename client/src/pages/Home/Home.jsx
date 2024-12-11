@@ -146,7 +146,10 @@ const Home = () => {
       </div>
   
       {/* Movies Grid */}
-      <div className="container mt-4">
+      <div className="movies-section" style={{ 
+  maxWidth: "1200px", 
+  margin: "0 auto"
+}}>
         {loading ? (
           <LoadingSpinner message="Loading movies..." />
         ) : error ? (
@@ -172,13 +175,11 @@ const Home = () => {
                     Found {searchData?.searchMovies.totalResults} results for "{searchTerm}"
                   </p>
                 )}
-                <div className="columns is-multiline is-mobile m-0">
-                  {movies?.map((movie) => (
-                    <div key={movie.id} className="column is-3-desktop is-4-tablet is-6-mobile p-2">
-                      <MovieCard movie={movie} />
-                    </div>
-                  ))}
-                </div>
+                  <div className="movies-grid-container">
+    {movies?.map((movie) => (
+      <MovieCard key={movie.id} movie={movie} />
+    ))}
+  </div>
                 {/* Pagination */}
                 {totalPages > 1 && (
                   <div className="pagination-wrapper mt-6">

@@ -1,28 +1,26 @@
-.movie-card {
+/* MovieCard.css */
+.movie-card-container {
+  width: 100%;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+}
+
+.movie-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  width: 250px;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background: white;
-  width: 100%;
-  max-width: 220px;
-  margin: 0 auto;
   transition: transform 0.2s ease;
-}
-
-.movie-link {
-  display: inline-block; /* Change to inline-block */
-  text-decoration: none;
-  color: inherit;
-  width: auto; /* Change from fit-content */
-  margin: 0 auto;
 }
 
 .card-image {
   position: relative;
   width: 100%;
-  padding-bottom: 150%; /* Maintain 2:3 ratio */
+  padding-bottom: 150%;
 }
 
 .card-image img {
@@ -41,6 +39,7 @@
 .title.is-5 {
   font-size: 1rem;
   margin-bottom: 0.5rem;
+  color: #363636;
 }
 
 .rating {
@@ -51,5 +50,4 @@
 .movie-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s ease;
 }
