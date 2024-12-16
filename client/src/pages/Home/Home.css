@@ -69,7 +69,7 @@
 .search-form {
   background: rgba(255, 255, 255, 0.7);
   padding: 0.5rem; 
-  border-radius: 8px;
+  border-radius: 10px;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
   width: 100%;
   max-width: 800px;
@@ -81,8 +81,9 @@
   margin: 0 auto;
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 60%;
-  gap: 2px;
+  gap: 10px;
 }
 
 .field.has-addons .control {
@@ -108,8 +109,21 @@
 
 .search-form .button {
   height: 3rem !important;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.field.has-addons .control .button.is-medium {
+  height: 3rem !important;
+}
+
+.field.has-addons .control .button {
+  width: 60px; /* Set fixed width for both buttons */
+  padding: 0 1rem; /* Consistent padding */
+  height: 2.5rem;
+  justify-content: center;
+  display: flex;
+  align-items: center;
 }
 
 /* Movies Grid */

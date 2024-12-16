@@ -123,7 +123,7 @@ const Home = () => {
               <div className="control">
                 <button 
                   type="submit" 
-                  className={`button is-primary is-medium ${loading ? 'is-loading' : ''}`}
+                  className={`button is-primary is-small ${loading ? 'is-loading' : ''}`}
                   disabled={loading}
                 >
                   Search
@@ -133,7 +133,7 @@ const Home = () => {
                 <div className="control">
                   <button 
                     type="button" 
-                    className="button is-light is-medium"
+                    className="button is-light is-small"
                     onClick={handleClearSearch}
                   >
                     Clear
