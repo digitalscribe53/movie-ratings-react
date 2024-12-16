@@ -39,7 +39,7 @@ const Navbar = () => {
           </>
         ) : (
           <Link to="/login" className="nav-link">
-            Log in or Sign up
+            Log in
           </Link>
         )}
       </div>
