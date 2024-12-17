@@ -1,6 +1,7 @@
 .movies-section {
   padding: 0 8px;
   margin-top: 2rem;
+  background-color: #000000;
 }
 
 .movies-grid-container {
@@ -13,6 +14,7 @@
 .home-container {
   padding-top: 4rem;
   width: 100%;
+  background-color: #000000;
 }
 
 .home-container .container {

@@ -10,8 +10,8 @@
 body {
   margin: 0;
   min-width: 320px;
-  background-color: #ffffff;
-  color: #213547;
+  background-color: #000000;
+  color: #ffffff;
 }
 
 /* Basic button styles that won't interfere with Bulma */

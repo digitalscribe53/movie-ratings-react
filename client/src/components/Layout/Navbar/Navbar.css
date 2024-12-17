@@ -1,7 +1,7 @@
 .navbar {
     padding: 0.5rem 1rem;
     min-height: 4rem;
-    background-color: white;
+    background-color: #000000;
     width: 100%;
     position: fixed;
     top: 0;
@@ -11,6 +11,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-bottom: 1px solid #333;
 }
 
 .navbar-brand {
@@ -30,7 +31,7 @@
 .site-title {
     font-family: 'Oooh Baby', cursive;
     font-size: 3rem; 
-    color: #363636;
+    color: #ffffff;
     white-space: nowrap;
 }
 
@@ -49,7 +50,7 @@
 }
 
 .nav-link {
-    color: #4a4a4a;
+    color: #ffffff;
     font-size: 1.1rem;
     font-weight: 500;
     text-decoration: none;
@@ -59,7 +60,7 @@
 }
 
 .nav-link:hover {
-    color: #485fc7;
+    color: #cccccc;
 }
 
 .auth-links {
