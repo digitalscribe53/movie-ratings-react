@@ -1,5 +1,6 @@
 .movies-section {
   padding: 0 8px;
+  margin-top: 2rem;
 }
 
 .movies-grid-container {
@@ -46,6 +47,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  margin-bottom: 2rem;
 }
 
 .hero-banner::before {
@@ -168,18 +170,26 @@
   .is-4-tablet {
     width: 33.33333%;
   }
+
+
+  .home-container .is-4-tablet {
+    width: 33.33333% !important;
+  }
+
+  .column.is-4-tablet {
+    width: 33.333% !important;
+  }
+
+  .movies-grid-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
 }
 
-.home-container .is-4-tablet {
-  width: 33.33333% !important;
-}
-
-.column.is-4-tablet {
-  width: 33.333% !important;
-}
-
-.movies-grid-container {
-  grid-template-columns: repeat(3, 1fr);
+@media screen and (max-width: 950px) {
+  .movies-grid-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 

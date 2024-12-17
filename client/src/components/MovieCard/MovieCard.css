@@ -9,12 +9,22 @@
   display: block;
   text-decoration: none;
   color: inherit;
-  width: 250px;
+  width: 200px;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background: white;
   transition: transform 0.2s ease;
+  
+}
+
+.movie-card .title.is-5 {
+  font-size: 1rem;
+  margin-top: 0;
+  white-space: nowrap;         /* Keep text in single line */
+  overflow: hidden;            /* Hide overflow */
+  text-overflow: ellipsis;     /* Add ellipsis */
+  width: 100%;                 /* Ensure full width */
 }
 
 .card-image {
@@ -33,7 +43,7 @@
 }
 
 .card-content {
-  padding: 1rem;
+  padding: 0.5rem;
 }
 
 .title.is-5 {
