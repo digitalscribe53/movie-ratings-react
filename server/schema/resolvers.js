@@ -128,8 +128,8 @@ const resolvers = {
       }
     },
 
-    movies: async (_, { page = 1, limit = 12 }) => {
-      try {
+    movies: async (_, { page = 1, limit = 20 }) => {
+      /*try {
         if (page < 1) {
           throw ErrorHandler.badRequest('Page number must be greater than 0');
         }
@@ -144,7 +144,28 @@ const resolvers = {
       } catch (error) {
         throw ErrorHandler.databaseError('Error fetching movies', error);
       }
-    },
+    },*/
+    try {
+      // Fetch popular movies directly from TMDB
+      const popularMovies = await tmdbAPI.getPopularMovies(page);
+      
+      // Map TMDB movies to match our Movie type
+      return popularMovies.map(movie => ({
+        id: `tmdb-${movie.tmdbId}`,
+        title: movie.title,
+        description: movie.description,
+        releaseYear: movie.releaseYear,
+        imageSrc: movie.imageSrc,
+        averageRating: movie.averageRating,
+        tmdbId: movie.tmdbId,
+        voteCount: movie.voteCount
+      }));
+    } catch (error) {
+      throw ErrorHandler.tmdbError('Error fetching popular movies', error);
+    }
+  },
+
+
 
     moviesByTitle: async (_, { title }) => {
       if (!title.trim()) {

@@ -63,6 +63,7 @@ const tmdbAPI = {
         tmdbId: movie.id,
         averageRating: movie.vote_average / 2, // Convert from TMDB's 10-point to our 5-point scale
         voteCount: movie.vote_count
+        
       }));
     } catch (error) {
       console.error('Error fetching popular movies:', error);
