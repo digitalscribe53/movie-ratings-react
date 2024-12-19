@@ -1,11 +1,21 @@
 .movie-details {
     padding-top: 5rem;
-    padding-bottom: 2rem;
+    padding-bottom: 1rem;
   }
   
   .movie-details .card {
     box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
     transition: box-shadow 0.3s ease;
+    width: 100%;
+    height: auto;
+  }
+
+  .movie-details .column.is-one-quarter {
+    padding-top: 2rem;
+    width: 300px;
+    padding-bottom: 0;
+    height: auto;
+    flex: 0 0 auto;
   }
   
   .movie-details .card:hover {
@@ -16,6 +26,7 @@
     padding-top: 150%;
     position: relative;
     width: 100%;
+    display: block;
   }
   
   .movie-details .image.is-2by3 img {
@@ -25,6 +36,23 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .movie-details .card-image {
+    height: auto;
+    display: block;
+  }
+
+  .movie-details .columns {
+    display: flex;
+    align-items: flex-start; /* This prevents stretching */
+    height: auto;
+  }
+
+  .movie-details .column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
   
   .ratings-container {
@@ -48,6 +76,22 @@
     color: #666;
     font-style: italic;
   }
+
+  .reviews-section {
+    margin-top: 2rem; /* Add some space between description and reviews */
+  }
+
+.mb-5 {
+    margin-bottom: 2rem !important; /* Override Bulma's default 3rem */
+  }
+
+.mb-4 {
+    margin-bottom: 1.5rem !important; /* Override Bulma's default */
+  }
+
+  
+
+  
   
   @media screen and (max-width: 768px) {
     .movie-details {
