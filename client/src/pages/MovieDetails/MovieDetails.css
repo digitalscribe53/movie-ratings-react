@@ -1,121 +1,212 @@
+/* Main container */
 .movie-details {
-    padding-top: 5rem;
-    padding-bottom: 1rem;
-  }
-  
-  .movie-details .card {
-    box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
-    transition: box-shadow 0.3s ease;
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-  }
+  padding-top: 5rem;
+  padding-bottom: 1rem;
+  width: 100%;
+  overflow-x: hidden;
+}
 
+/* Columns layout */
+.movie-details .columns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin: 0;
+  width: 100%;
+}
+
+/* Movie poster column */
+.movie-details .column.is-one-quarter {
+  padding-top: 2rem;
+  width: 300px;
+  padding-bottom: 0;
+  height: auto;
+  flex: 0 0 auto;
+}
+
+/* Content column */
+.movie-details .column:not(.is-one-quarter) {
+  flex: 1;
+  max-width: 1000px;
+  padding: 0 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Movie card and image */
+.movie-details .card {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
+}
+
+.movie-details .image.is-2by3 {
+  padding-top: 150%;
+  position: relative;
+  width: 100%;
+  margin: 0;
+}
+
+/* Description and reviews content */
+.review-content {
+  font-size: 1rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  width: 100%;
+}
+
+.reviews-section {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+.reviews-list .box,
+.tmdb-reviews .box,
+.local-reviews .box {
+  width: 100%;
+  max-width: 800px;
+  padding: 1rem;
+  margin: 0 0 1rem 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 1024px) {
   .movie-details .column.is-one-quarter {
-    padding-top: 2rem;
-    width: 300px;
-    padding-bottom: 0;
-    height: auto;
-    flex: 0 0 auto;
+      width: 250px;
   }
-  
-  .movie-details .card:hover {
-    box-shadow: 0 4px 6px rgba(10, 10, 10, 0.2);
-  }
-  
-  .movie-details .image.is-2by3 {
-    padding-top: 150%;
-    position: relative;
-    width: 100%;
-    display: block;
-    margin: 0;
-    height: auto;
-  }
-  
-  .movie-details .image.is-2by3 img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+}
 
-  .movie-details .card-image {
-    height: auto;
-    display: block;
+@media screen and (max-width: 768px) {
+  .movie-details {
+      padding: 4rem 0.5rem 1rem;
   }
 
   .movie-details .columns {
-    display: flex;
-    align-items: flex-start; /* This prevents stretching */
+      flex-direction: column;
+      gap: 1rem;
+      margin: 0;
+      gap: 0;
+  }
+
+  .movie-details .column.is-one-quarter {
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+      padding-bottom: 0;
+  }
+
+  .movie-details .column:not(.is-one-quarter) {
+      width: 100%;
+      margin-top: 1rem;
+  }
+
+  .movie-details .image.is-2by3 {
+    padding-top: 0;
     height: auto;
   }
 
-  .movie-details .column {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .movie-details figure {
-    margin: 0;
+  /* Actual image */
+  .movie-details .image.is-2by3 img {
+    position: relative;
+    width: 100%;
+    height: auto;
+    max-height: 450px;
+    object-fit: contain;
   }
 
   .card-image {
     position: relative;
     width: 100%;
+    padding-bottom: 0 !important;
     height: auto;
-    padding-bottom: 0; /* Remove the padding-bottom that's causing extra space */
-  }
-
-  
-  .ratings-container {
-    display: flex;
-    gap: 2rem;
-    margin-bottom: 1rem;
-  }
-  
-  .reviews-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .review-content {
-    font-size: 1rem;
-    line-height: 1.6;
-  }
-  
-  .review-author {
-    color: #666;
-    font-style: italic;
   }
 
   .reviews-section {
-    margin-top: 2rem; /* Add some space between description and reviews */
+      padding: 0 0.5rem;
   }
 
-.mb-5 {
-    margin-bottom: 2rem !important; /* Override Bulma's default 3rem */
+  .review-content {
+      font-size: 0.95rem;
   }
 
-.mb-4 {
-    margin-bottom: 1.5rem !important; /* Override Bulma's default */
+  .ratings-container {
+    flex-direction: column;
+    gap: 1rem;
   }
 
-  
-
-  
-  
-  @media screen and (max-width: 768px) {
-    .movie-details {
-      padding: 4rem 1rem 2rem;
-    }
-  
-    .ratings-container {
-      flex-direction: column;
-      gap: 1rem;
-    }
+  /* Make description text wrap */
+  .mb-5 p {
+      white-space: normal;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      width: 100%;
   }
+
+  .reviews-list .box,
+  .tmdb-reviews .box,
+  .local-reviews .box {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0 0 0.75rem 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .movie-details {
+      padding: 4rem 0.25rem 1rem;
+  }
+
+  .movie-details .columns {
+    gap: 0;
+  }
+
+  .movie-details .column.is-one-quarter {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .card-image {
+    position: relative;
+    width: 100%;
+    padding-bottom: 0;
+  }
+
+  .movie-details .column:not(.is-one-quarter) {
+    padding-top: 1rem;
+  }
+
+  .movie-details .image.is-2by3 {
+    padding-top: 0;
+    margin-bottom: 0;
+    height: auto;
+    max-height: 450px;
+  }
+
+  .movie-details .image.is-2by3 img {
+    position: relative;
+    height: auto;
+    max-height: 450px;
+  }
+
+  .title.is-2 {
+    margin-top: 0;
+  }
+
+  .reviews-list .box,
+  .tmdb-reviews .box,
+  .local-reviews .box {
+      padding: 0.75rem;
+      width: 100%;
+      margin: 0 0 0.75rem 0;
+      box-sizing: border-box;
+  }
+}
