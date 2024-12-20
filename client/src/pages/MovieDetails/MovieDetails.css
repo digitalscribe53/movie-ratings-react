@@ -8,6 +8,8 @@
     transition: box-shadow 0.3s ease;
     width: 100%;
     height: auto;
+    display: flex;
+    flex-direction: column;
   }
 
   .movie-details .column.is-one-quarter {
@@ -27,6 +29,8 @@
     position: relative;
     width: 100%;
     display: block;
+    margin: 0;
+    height: auto;
   }
   
   .movie-details .image.is-2by3 img {
@@ -54,6 +58,18 @@
     flex-direction: column;
     align-items: flex-start;
   }
+
+  .movie-details figure {
+    margin: 0;
+  }
+
+  .card-image {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding-bottom: 0; /* Remove the padding-bottom that's causing extra space */
+  }
+
   
   .ratings-container {
     display: flex;
