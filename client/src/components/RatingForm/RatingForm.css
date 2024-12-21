@@ -1,26 +1,54 @@
 .rating-form {
-    margin-bottom: 2rem;
+  margin-bottom: 2rem;
+}
+
+.stars-outer-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.stars-row {
+  display: flex;
+  gap: 0.25rem; /* Reduced gap between stars */
+  justify-content: center;
+}
+
+.star-button {
+  background: none;
+  border: none;
+  font-size: 1.75rem; /* Slightly smaller stars */
+  color: #ddd;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0.25rem;
+}
+
+.star-button.active {
+  color: gold;
+}
+
+.star-button:hover {
+  transform: scale(1.1);
+}
+
+.rating-value {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #ffffff;
+  margin-top: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media screen and (min-width: 768px) {
+  .stars-outer-container {
+      flex-direction: row;
+      justify-content: center;
+      gap: 0.5rem;
   }
-  
-  .stars-container {
-    display: flex;
-    gap: 0.5rem;
-  }
-  
+
   .star-button {
-    background: none;
-    border: none;
-    font-size: 2rem;
-    color: #ddd;
-    cursor: pointer;
-    transition: color 0.2s ease;
-    padding: 0;
+      font-size: 2rem;
   }
-  
-  .star-button.active {
-    color: gold;
-  }
-  
-  .star-button:hover {
-    transform: scale(1.1);
-  }
+}

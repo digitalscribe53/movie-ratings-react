@@ -255,13 +255,13 @@ const MovieDetails = () => {
             <div className="ratings-container">
               <div className="local-rating">
                 <p className="is-size-5">
-                  Movie Ratings App: ⭐ {movie.averageRating?.toFixed(1) || 'Not rated'}
+                  Movie Ratings App: ⭐ {movie.averageRating ? `${movie.averageRating.toFixed(1)}/10` : 'Not rated'}
                 </p>
               </div>
               {data.tmdbMovieDetails && (
                 <div className="tmdb-rating">
                   <p className="is-size-5">
-                    TMDB Rating: ⭐ {data.tmdbMovieDetails.tmdbRating?.toFixed(1)}
+                    TMDB Rating: ⭐ {data.tmdbMovieDetails.tmdbRating?.toFixed(1)}/10
                     <span className="is-size-6"> ({data.tmdbMovieDetails.voteCount} votes)</span>
                   </p>
                 </div>

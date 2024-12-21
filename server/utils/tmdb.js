@@ -61,7 +61,7 @@ const tmdbAPI = {
         releaseYear: new Date(movie.release_date).getFullYear(),
         imageSrc: `${IMAGE_BASE_URL}${movie.poster_path}`,
         tmdbId: movie.id,
-        averageRating: movie.vote_average / 2, // Convert from TMDB's 10-point to our 5-point scale
+        averageRating: movie.vote_average,
         voteCount: movie.vote_count
         
       }));

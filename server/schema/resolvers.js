@@ -354,8 +354,8 @@ const resolvers = {
         throw ErrorHandler.unauthorized('Must be logged in to rate movies');
       }
 
-      if (rating < 1 || rating > 5) {
-        throw ErrorHandler.validationError('Rating must be between 1 and 5');
+      if (rating < 1 || rating > 10) {
+        throw ErrorHandler.validationError('Rating must be between 1 and 10');
       }
 
       try {

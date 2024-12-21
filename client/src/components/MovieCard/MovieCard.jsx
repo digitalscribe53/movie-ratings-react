@@ -22,7 +22,7 @@ const MovieCard = ({ movie }) => {
           <p className="title is-5">{title}</p>
           <div className="rating">
             {averageRating > 0 ? (
-              <span>⭐ {averageRating.toFixed(1)}</span>
+              <span>⭐ {averageRating.toFixed(1)}/10</span>
             ) : (
               <span>Not yet rated</span>
             )}

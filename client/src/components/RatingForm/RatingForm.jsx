@@ -18,7 +18,7 @@ const ADD_RATING = gql`
 `;
 
 const RatingForm = ({ movieId, currentRating, onRatingSubmit }) => {
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(5);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [notification, setNotification] = useState(null);
   const [addRating] = useMutation(ADD_RATING);
@@ -57,7 +57,8 @@ const RatingForm = ({ movieId, currentRating, onRatingSubmit }) => {
       )}
       <h3 className="subtitle is-5">Rate this movie</h3>
       <form onSubmit={handleSubmit}>
-        <div className="stars-container mb-3">
+        <div className="stars-outer-container">
+          <div className="stars-row">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
@@ -70,6 +71,24 @@ const RatingForm = ({ movieId, currentRating, onRatingSubmit }) => {
               ★
             </button>
           ))}
+        </div>
+        <div className="stars-row">
+            {[6, 7, 8, 9, 10].map((star) => (
+              <button
+                key={star}
+                type="button"
+                className={`star-button ${star <= (hoveredRating || rating) ? 'active' : ''}`}
+                onMouseEnter={() => setHoveredRating(star)}
+                onMouseLeave={() => setHoveredRating(0)}
+                onClick={() => setRating(star)}
+              >
+                ★
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="rating-value mb-3">
+          {hoveredRating || rating}/10
         </div>
         <button 
           type="submit" 
