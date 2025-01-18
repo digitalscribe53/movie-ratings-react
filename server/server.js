@@ -63,7 +63,7 @@ async function startServer() {
     // Global Middleware
     app.use(cors({
       origin: process.env.NODE_ENV === 'production' 
-        ? process.env.CLIENT_URL 
+        ? 'https://your-frontend-url.onrender.com'  
         : 'http://localhost:5173',
       credentials: true
     }));
