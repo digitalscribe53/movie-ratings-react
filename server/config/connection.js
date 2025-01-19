@@ -16,15 +16,27 @@ if (process.env.DATABASE_URL) {
     }
   });
 
-  // One-time sync for production database
-  sequelize.sync({ force: true })
-    .then(() => {
-      console.log('Database tables recreated');
-    })
-    .catch(err => {
-      console.error('Error syncing database:', err);
-    });
-    
+  const syncTables = async () => {
+    try {
+      // Create tables in correct order
+      await sequelize.query('DROP TABLE IF EXISTS "review" CASCADE');
+      await sequelize.query('DROP TABLE IF EXISTS "rating" CASCADE');
+      await sequelize.query('DROP TABLE IF EXISTS "movie" CASCADE');
+      await sequelize.query('DROP TABLE IF EXISTS "user" CASCADE');
+      
+      // Create tables in order
+      await User.sync({ force: true });
+      await Movie.sync({ force: true });
+      await Rating.sync({ force: true });
+      await Review.sync({ force: true });
+      
+      console.log('All tables created successfully');
+    } catch (error) {
+      console.error('Error syncing tables:', error);
+      throw error;
+    }
+  };
+
 } else {
   // Local development configuration
   sequelize = new Sequelize(
@@ -40,4 +52,7 @@ if (process.env.DATABASE_URL) {
   );
 }
 
-module.exports = sequelize;
+module.exports = {
+  sequelize,
+  syncTables
+};

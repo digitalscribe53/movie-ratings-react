@@ -10,6 +10,8 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const xss = require('xss-clean');
 require('dotenv').config();
+const { sequelize, syncTables } = require('./config/connection');
+const { setupAssociations } = require('./models');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -83,8 +85,11 @@ async function startServer() {
       res.status(500).send('Something broke!');
     });
 
-    // Database sync and server start
-    await db.sync({ force: false });
+    // Set up associations
+    setupAssociations();
+
+    // Sync tables in order
+    await syncTables();
     console.log('Database synced');
 
     app.listen(PORT, () => {
