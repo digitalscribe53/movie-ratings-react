@@ -45,6 +45,8 @@ async function startServer() {
       crossOriginEmbedderPolicy: false,
     }));
 
+    app.enable('trust proxy'); 
+
     // Rate limiting
     const limiter = rateLimit({
       windowMs: 15 * 60 * 1000, // 15 minutes

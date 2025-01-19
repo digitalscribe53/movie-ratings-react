@@ -15,6 +15,16 @@ if (process.env.DATABASE_URL) {
       }
     }
   });
+
+  // One-time sync for production database
+  sequelize.sync({ force: true })
+    .then(() => {
+      console.log('Database tables recreated');
+    })
+    .catch(err => {
+      console.error('Error syncing database:', err);
+    });
+    
 } else {
   // Local development configuration
   sequelize = new Sequelize(
