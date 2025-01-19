@@ -10,7 +10,8 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const xss = require('xss-clean');
 require('dotenv').config();
-const { sequelize, syncTables } = require('./config/connection');
+const sequelize = require('./config/connection');
+const syncTables = require('./config/syncTables');
 const { setupAssociations } = require('./models');
 
 const PORT = process.env.PORT || 3001;

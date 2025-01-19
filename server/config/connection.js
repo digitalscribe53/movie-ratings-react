@@ -13,6 +13,11 @@ if (process.env.DATABASE_URL) {
         require: true,
         rejectUnauthorized: false
       }
+    },
+    define: {
+      timestamps: true,
+      underscored: true, 
+      underscoredAll: true
     }
   });
 
@@ -27,34 +32,13 @@ if (process.env.DATABASE_URL) {
       dialect: 'postgres',
       port: 5432,
       logging: false,
+      define: {
+        timestamps: true, 
+        underscored: true,
+        underscoredAll: true
+      }
     }
   );
 }
 
-  const syncTables = async () => {
-    try {
-      // Create tables in correct order
-      await sequelize.query('DROP TABLE IF EXISTS "review" CASCADE');
-      await sequelize.query('DROP TABLE IF EXISTS "rating" CASCADE');
-      await sequelize.query('DROP TABLE IF EXISTS "movie" CASCADE');
-      await sequelize.query('DROP TABLE IF EXISTS "user" CASCADE');
-      
-      // Create tables in order
-      await User.sync({ force: true });
-      await Movie.sync({ force: true });
-      await Rating.sync({ force: true });
-      await Review.sync({ force: true });
-      
-      console.log('All tables created successfully');
-    } catch (error) {
-      console.error('Error syncing tables:', error);
-      throw error;
-    }
-  };
-
-
-
-module.exports = {
-  sequelize,
-  syncTables
-};
+module.exports = sequelize;
