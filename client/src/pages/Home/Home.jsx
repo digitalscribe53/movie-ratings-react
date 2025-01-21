@@ -57,7 +57,9 @@ const Home = () => {
 
   // Query for initial movies
   const { loading: loadingMovies, error: moviesError, data: moviesData } = useQuery(GET_MOVIES, {
-    variables: { page: currentPage }
+    variables: { page: currentPage },
+    onError: (error) => console.error('GraphQL Error', error),
+    onCompleted: (data) => console.log('Query completed:', data)
   });  
 
   const loading = loadingMovies || searchLoading;
@@ -68,7 +70,10 @@ const Home = () => {
     fetchPolicy: 'network-only'
   });
 
-  console.log('Movies data:', movies?.length, movies);
+  console.log('isSearching:', isSearching);
+  console.log('moviesData:', moviesData);
+  console.log('searchData:', searchData);
+  console.log('Final movies array:', movies);
 
   const totalPages = isSearching 
     ? searchData?.searchMovies.totalPages 

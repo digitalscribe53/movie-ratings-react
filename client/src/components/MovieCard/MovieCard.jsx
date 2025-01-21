@@ -1,9 +1,27 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
 import './MovieCard.css';
 
 // MovieCard.jsx
 const MovieCard = ({ movie }) => {
   const { id, title, imageSrc, averageRating } = movie;
+  const containerRef = useRef(null);
+  const [imgError, setImgError] = useState(false);
+
+  console.log('Movie data received:', { id, title, imageSrc, averageRating });
+
+  useEffect(() => {
+    const logWidth = () => {
+      if (containerRef.current) {
+        console.log('Container width:', containerRef.current.offsetWidth);
+        console.log('Image loaded:', !!containerRef.current.querySelector('img'));
+      }
+    };
+
+    logWidth();
+    window.addEventListener('resize', logWidth);
+    return () => window.removeEventListener('resize', logWidth);
+  }, []);
 
   return (
     <div className="movie-card-container">

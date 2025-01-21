@@ -1,3 +1,57 @@
+.user-menu-container {
+    position: relative;
+}
+
+.user-icon-wrapper {
+    position: relative;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.user-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.user-icon-hover {
+    transform: scale(1.1);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top:100%;
+    right: 0;
+    background-color: #000000;
+    border: 1px solid #333;
+    border-radius: 4px;
+    min-width: 120px;
+    z-index: 1000;
+    padding: 0.5rem 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-item {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1rem;
+    white-space: nowrap;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #333;
+    color: #ffffff;
+}
+
 .navbar {
     padding: 0.5rem 1rem;
     min-height: 4rem;
@@ -108,6 +162,16 @@
     .auth-links {
         padding-right: 0.5rem;
     }
+
+    .user-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .dropdown-item {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+    }
 }
 
 @media screen and (max-width: 480px) {
@@ -121,5 +185,19 @@
 
     .tmdb-logo {
         height: 1.1rem;
+    }
+
+    .user-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .dropdown-menu {
+        min-width: 100px;
+    }
+
+    .dropdown-item {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
     }
 }

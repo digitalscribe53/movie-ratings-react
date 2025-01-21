@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
+import { useState } from 'react';
 import './Navbar.css';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-
+  const [showDropdown, setShowDropdown] = useState(false); 
   const handleLogout = () => {
     logout(); // The navigation is already handled in AuthContext
+    setShowDropdown(false); 
   };
 
   return (
@@ -24,24 +26,48 @@ const Navbar = () => {
       </div>
 
       <div className="auth-links">
-        {user ? (
-          <>
-            <Link to={`/profile/${user.id}`} className="nav-link">
-              Profile
-            </Link>
-            <button 
-              onClick={logout} 
-              className="nav-link"
-              style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-            >
-              Log Out
-            </button>
-          </>
-        ) : (
-          <Link to="/login" className="nav-link">
-            Log in
-          </Link>
-        )}
+        <div className="user-menu-container">
+          <div 
+            className="user-icon-wrapper"
+            onMouseEnter={() => setShowDropdown(true)}
+            onMouseLeave={() => setShowDropdown(false)}
+          >
+            <img
+              src="/images/static/images111.png"
+              alt="User Menu"
+              className="user-icon"
+            />
+            {showDropdown && (
+              <div className="dropdown-menu">
+                {user ? (
+                  <>
+                    <Link 
+                      to={`/profile/${user.id}`} 
+                      className="dropdown-item"
+                      onClick={() => setShowDropdown(false)}
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="dropdown-item"
+                    >
+                      Log Out
+                    </button>
+                  </>
+                ) : (
+                  <Link 
+                    to="/login" 
+                    className="dropdown-item"
+                    onClick={() => setShowDropdown(false)}
+                  >
+                    Log in
+                  </Link>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </nav>
   );
