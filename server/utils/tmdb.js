@@ -48,14 +48,31 @@ const tmdbAPI = {
   // Get popular movies
   getPopularMovies: async (page = 1) => {
     try {
-      const response = await axios.get(`${BASE_URL}/movie/popular`, {
-        params: {
-          api_key: TMDB_API_KEY,
-          page
-        }
-      });
+      // Calculate the two pages we need to fetch
+      const firstPage = page * 2 - 1;
+      const secondPage = page * 2;
+  
+      // Make both API calls simultaneously
+      const [response1, response2] = await Promise.all([
+        axios.get(`${BASE_URL}/movie/popular`, {
+          params: {
+            api_key: TMDB_API_KEY,
+            page: firstPage
+          }
+        }),
+        axios.get(`${BASE_URL}/movie/popular`, {
+          params: {
+            api_key: TMDB_API_KEY,
+            page: secondPage
+          }
+        })
+      ]);
       
-      return response.data.results.map(movie => ({
+      // Combine and map the results
+      const combinedResults = [
+        ...response1.data.results,
+        ...response2.data.results
+      ].map(movie => ({
         title: movie.title,
         description: movie.overview,
         releaseYear: new Date(movie.release_date).getFullYear(),
@@ -63,14 +80,15 @@ const tmdbAPI = {
         tmdbId: movie.id,
         averageRating: movie.vote_average,
         voteCount: movie.vote_count
-        
       }));
+  
+      return combinedResults;
     } catch (error) {
       console.error('Error fetching popular movies:', error);
       throw error;
     }
   },
-
+  
   // Search movies
   searchMovies: async (query, page = 1) => {
     try {

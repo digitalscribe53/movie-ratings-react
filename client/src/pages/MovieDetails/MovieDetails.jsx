@@ -255,7 +255,9 @@ const MovieDetails = () => {
             <div className="ratings-container">
               <div className="local-rating">
                 <p className="is-size-5">
-                  Movie Ratings App: ⭐ {movie.averageRating ? `${movie.averageRating.toFixed(1)}/10` : 'Not rated'}
+                  Movie Ratings App: {movie.ratings && movie.ratings.length > 0 
+          ? `⭐ ${movie.averageRating.toFixed(1)}/10`
+          : 'No ratings yet'}
                 </p>
               </div>
               {data.tmdbMovieDetails && (
