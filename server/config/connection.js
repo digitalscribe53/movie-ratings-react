@@ -12,7 +12,9 @@ if (process.env.DATABASE_URL) {
       ssl: {
         require: true,
         rejectUnauthorized: false
-      }
+      },
+      // Prefer IPv4
+      family: 4
     },
     define: {
       timestamps: true,
