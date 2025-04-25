@@ -5,24 +5,29 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center; /* Center the form horizontally */
   }
   
-  /* Modern form styling */
+  /* Modern form styling with dark mode */
   .box {
     border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     padding: 2rem;
-    background: white;
+    background: #1a1a1a; /* Dark background for the form */
     border: none;
+    color: #e1e1e1; /* Light text color */
+    width: 100%; /* Make sure the box uses the full width of its container */
   }
   
   .input {
     border-radius: 8px;
     height: 45px;
-    border: 1px solid #e1e1e1;
+    border: 1px solid #444;
     box-shadow: none;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     transition: all 0.2s ease;
+    background-color: #2a2a2a; /* Dark input background */
+    color: #e1e1e1; /* Light text color */
   }
   
   .input:focus {
@@ -35,6 +40,7 @@
     height: 45px;
     font-weight: 500;
     transition: all 0.2s ease;
+    margin-top: 1.5rem; /* Add more space above the button */
   }
   
   .button.is-primary:hover {
@@ -46,18 +52,36 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-weight: 500;
     font-size: 0.9rem;
-    color: #363636;
+    color: #e1e1e1; /* Light label color */
   }
   
   .title {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     margin-bottom: 1.5rem;
-    color: #363636;
+    color: #e1e1e1; /* Light title color */
   }
   
-  /* Add a subtle background pattern */
+  /* Link styling for dark mode */
+  a {
+    color: #3273dc; /* Bright blue color for links */
+  }
+  
+  a:hover {
+    color: #488aff;
+  }
+  
+  /* Dark mode background */
   body {
-    background-color: #f5f7fa;
-    background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    background-attachment: fixed;
+    background-color: #121212;
+  }
+  
+  /* Add this class to ensure the form content is centered */
+  .column {
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* Make the text in the bottom of the form light colored */
+  p.has-text-centered {
+    color: #e1e1e1;
   }

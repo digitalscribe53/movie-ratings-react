@@ -72,7 +72,7 @@ const Login = () => {
         />
       )}
       
-      <div className="columns is-centered">
+      <div className="columns is-centered" style={{width: '100%'}}>
         <div className="column is-5-tablet is-4-desktop">
           <form onSubmit={handleSubmit} className="box">
           <h1 className="title has-text-centered">Welcome Back</h1>
