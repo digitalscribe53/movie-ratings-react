@@ -54,12 +54,12 @@ const Login = () => {
       authLogin(data.login.token, data.login.user);
       navigate(redirect);
       
-    } catch (error) {
-      setNotification({
-        type: 'danger',
-        message: 'Invalid username or password'
-      });
-    }
+    } catch {
+        setNotification({
+          type: 'danger',
+          message: 'Invalid username or password'
+        });
+      }
   };
 
   return (
@@ -75,7 +75,8 @@ const Login = () => {
       <div className="columns is-centered">
         <div className="column is-5-tablet is-4-desktop">
           <form onSubmit={handleSubmit} className="box">
-            <h1 className="title has-text-centered">Login</h1>
+          <h1 className="title has-text-centered">Welcome Back</h1>
+          <p className="subtitle has-text-centered is-6 has-text-grey">Sign in to your account</p>
             
             <div className="field">
               <label className="label">Username</label>
@@ -114,7 +115,7 @@ const Login = () => {
             </div>
 
             <p className="has-text-centered mt-4">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <a href="/signup">Sign up instead</a>
             </p>
           </form>
