@@ -77,7 +77,7 @@ const Home = () => {
 
   const totalPages = isSearching 
     ? searchData?.searchMovies.totalPages 
-    : 1; // Default to 1 for now since we removed it from GET_MOVIES query
+    : 1; // Default to 1 for now since removed it from GET_MOVIES query
 
 
   const handleSearch = async (e) => {
@@ -112,43 +112,47 @@ const Home = () => {
   return (
     <div className="home-container">
       {/* Hero Section with Search */}
-      <div className="hero-banner">
-        <div className="container">
-          <form onSubmit={handleSearch} className="search-form">
-            <div className="field has-addons">
-              <div className="control is-expanded">
-                <input 
-                  className="input is-medium"
-                  type="text"
-                  placeholder="Search for movies..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              <div className="control">
-                <button 
-                  type="submit" 
-                  className={`button is-primary is-small ${loading ? 'is-loading' : ''}`}
-                  disabled={loading}
-                >
-                  Search
-                </button>
-              </div>
-              {isSearching && (
-                <div className="control">
-                  <button 
-                    type="button" 
-                    className="button is-light is-small"
-                    onClick={handleClearSearch}
-                  >
-                    Clear
-                  </button>
-                </div>
-              )}
-            </div>
-          </form>
+<div className="hero-banner">
+  <div className="container">
+    <form onSubmit={handleSearch} className="search-form">
+      <div className="field">
+        <div className="control has-icons-right">
+          <input 
+            className="input is-medium"
+            type="text"
+            placeholder="Search for movies..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <span 
+            className="icon is-right is-clickable" 
+            onClick={handleSearch}
+            style={{ pointerEvents: 'auto', cursor: 'pointer' }}
+          >
+            <img 
+              src="/images/static/magnifying-glass-icon.jpg" 
+              alt="Search" 
+              style={{ 
+                width: '24px', 
+                height: '24px', 
+                objectFit: 'contain' 
+              }} 
+            />
+          </span>
         </div>
+        {isSearching && (
+          <button 
+            type="button" 
+            className="button is-light is-small mt-2"
+            onClick={handleClearSearch}
+          >
+            Clear
+          </button>
+        )}
       </div>
+    </form>
+  </div>
+</div>
   
       {/* Movies Grid */}
       <div className="movies-section" style={{ 
