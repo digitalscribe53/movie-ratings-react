@@ -1,3 +1,16 @@
+/* Override conflicting styles causing horizontal layout */
+.movie-details .column:not(.is-one-quarter) {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+}
+  
+/* Force each section to be full width and stack vertically */
+.movie-details .column:not(.is-one-quarter) > * {
+  width: 100% !important;
+  margin-bottom: 1.5rem !important;
+}
+
 /* Main container */
 .movie-details {
   padding-top: 5rem;
@@ -93,6 +106,27 @@
   overflow-wrap: break-word;
   box-sizing: border-box;
 }
+
+.movie-details .column:not(.is-one-quarter) h1.title,
+.movie-details .column:not(.is-one-quarter) .ratings-section,
+.movie-details .column:not(.is-one-quarter) .mb-5,
+.movie-details .column:not(.is-one-quarter) .reviews-section {
+  display: block;
+  width: 100%;
+  clear: both;
+  margin-bottom: 1.5rem;
+}
+
+.mb-5 {
+    display: block;
+    width: 100%;
+  }
+
+.ratings-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 
 /* Responsive styles */
 @media screen and (max-width: 1024px) {

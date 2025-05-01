@@ -246,7 +246,7 @@ const MovieDetails = () => {
         </div>
 
         {/* Movie Info */}
-        <div className="column">
+        <div className="column is-flex is-flex-direction-column">
           <h1 className="title is-2">{movie.title}</h1>
           
           {/* Ratings Section */}
