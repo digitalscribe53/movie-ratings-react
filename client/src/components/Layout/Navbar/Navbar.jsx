@@ -5,12 +5,8 @@ import './Navbar.css';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-  const [showDropdown, setShowDropdown] = useState(false); 
-  const handleLogout = () => {
-    logout(); // The navigation is already handled in AuthContext
-    setShowDropdown(false); 
-  };
-
+  const [showDropdown, setShowDropdown] = useState(false);
+  
   return (
     <nav className="navbar" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
@@ -26,47 +22,42 @@ const Navbar = () => {
       </div>
 
       <div className="auth-links">
-        <div className="user-menu-container">
+        <div className="user-menu-container" style={{ position: 'relative' }}>
           <div 
             className="user-icon-wrapper"
-            onMouseEnter={() => setShowDropdown(true)}
-            onMouseLeave={() => setShowDropdown(false)}
+            onClick={() => {
+              console.log('Icon clicked, current state:', showDropdown);
+              setShowDropdown(!showDropdown);
+            }}
           >
-            <img
-              src="/images/static/images111.png"
-              alt="User Menu"
-              className="user-icon"
-            />
-            {showDropdown && (
-              <div className="dropdown-menu">
-                {user ? (
-                  <>
-                    <Link 
-                      to={`/profile/${user.id}`} 
-                      className="dropdown-item"
-                      onClick={() => setShowDropdown(false)}
-                    >
-                      Profile
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="dropdown-item"
-                    >
-                      Log Out
-                    </button>
-                  </>
-                ) : (
-                  <Link 
-                    to="/login" 
-                    className="dropdown-item"
-                    onClick={() => setShowDropdown(false)}
-                  >
-                    Log in
-                  </Link>
-                )}
-              </div>
-            )}
+            <div className="hamburger-icon">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
           </div>
+          
+          {showDropdown && (
+            <div 
+              className="dropdown-menu"
+              style={{ display: 'block' }} // Force display: block
+            >
+              {user ? (
+                <>
+                  <Link to={`/profile/${user.id}`} className="dropdown-item">
+                    Profile
+                  </Link>
+                  <button onClick={logout} className="dropdown-item">
+                    Log Out
+                  </button>
+                </>
+              ) : (
+                <Link to="/login" className="dropdown-item">
+                  Log in
+                </Link>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </nav>

@@ -112,6 +112,8 @@ const Home = () => {
   return (
     <div className="home-container">
       {/* Hero Section with Search */}
+
+
 <div className="hero-banner">
   <div className="container">
     <form onSubmit={handleSearch} className="search-form">

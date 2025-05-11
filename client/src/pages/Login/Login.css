@@ -1,5 +1,6 @@
 /* Login.css  */
 .auth-container {
+    margin-top: 40px;
     padding: 2rem 1rem;
     min-height: 80vh;
     display: flex;
