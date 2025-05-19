@@ -18,6 +18,7 @@
 
 .user-menu-container {
     position: relative;
+    margin-right: 20px;
 }
 
 .user-icon-wrapper {
@@ -48,6 +49,7 @@
     z-index: 1000;
     padding: 0.5rem 0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    margin-right: 10px;
 }
 
 .dropdown-item {

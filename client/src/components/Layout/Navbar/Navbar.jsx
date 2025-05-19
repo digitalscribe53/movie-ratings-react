@@ -22,7 +22,7 @@ const Navbar = () => {
       </div>
 
       <div className="auth-links">
-        <div className="user-menu-container" style={{ position: 'relative' }}>
+        <div className="user-menu-container">
           <div 
             className="user-icon-wrapper"
             onClick={() => {
@@ -40,21 +40,29 @@ const Navbar = () => {
           {showDropdown && (
             <div 
               className="dropdown-menu"
-              style={{ display: 'block' }} // Force display: block
+              style={{ display: 'block' }} // Keep this critical inline style
             >
               {user ? (
                 <>
                   <Link to={`/profile/${user.id}`} className="dropdown-item">
                     Profile
                   </Link>
-                  <button onClick={logout} className="dropdown-item">
+                  <button
+                    onClick={logout}
+                    className="dropdown-item"
+                  >
                     Log Out
                   </button>
                 </>
               ) : (
-                <Link to="/login" className="dropdown-item">
-                  Log in
-                </Link>
+                <>
+                  <Link to="/login" className="dropdown-item">
+                    Log in
+                  </Link>
+                  <Link to="/signup" className="dropdown-item">
+                    Sign up
+                  </Link>
+                </>
               )}
             </div>
           )}
