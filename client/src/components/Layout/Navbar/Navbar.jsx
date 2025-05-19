@@ -1,11 +1,31 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './Navbar.css';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+  
+  // Handle clicks outside the dropdown
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    }
+    
+    // Add event listener when dropdown is open
+    if (showDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    
+    // Cleanup event listener
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDropdown]);
   
   return (
     <nav className="navbar" role="navigation" aria-label="main navigation">
@@ -22,11 +42,10 @@ const Navbar = () => {
       </div>
 
       <div className="auth-links">
-        <div className="user-menu-container">
+        <div className="user-menu-container" ref={dropdownRef}>
           <div 
             className="user-icon-wrapper"
             onClick={() => {
-              console.log('Icon clicked, current state:', showDropdown);
               setShowDropdown(!showDropdown);
             }}
           >
@@ -40,7 +59,7 @@ const Navbar = () => {
           {showDropdown && (
             <div 
               className="dropdown-menu"
-              style={{ display: 'block' }} // Keep this critical inline style
+              style={{ display: 'block' }}
             >
               {user ? (
                 <>
