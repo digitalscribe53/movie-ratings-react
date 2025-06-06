@@ -18,7 +18,8 @@
 
 .user-menu-container {
     position: relative;
-    margin-right: 20px;
+    margin-right: 10px; /* Reduced to move closer to edge */
+    flex-shrink: 0;
 }
 
 .user-icon-wrapper {
@@ -40,8 +41,9 @@
 
 .dropdown-menu {
     position: absolute;
-    top:100%;
-    right: 0;
+    top: 100%;
+    right: auto;
+    left: -80px;
     background-color: #000000;
     border: 1px solid #333;
     border-radius: 4px;
@@ -49,7 +51,7 @@
     z-index: 1000;
     padding: 0.5rem 0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    margin-right: 10px;
+    margin-right: 0px;
 }
 
 .dropdown-item {
@@ -73,7 +75,7 @@
 }
 
 .navbar {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.5rem; /* Reduced horizontal padding */
     min-height: 4rem;
     background-color: #000000;
     width: 100%;
@@ -92,7 +94,10 @@
     flex: 1;
     display: flex;
     justify-content: center;
-    padding-left: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 60px; /* Reserve space for hamburger menu */
+    min-width: 0;
+    overflow: hidden;
 }
 
 .site-title-container {
@@ -100,18 +105,20 @@
     align-items: center;
     gap: 0.5rem;
     text-decoration: none;
+    overflow: hidden;
+    max-width: 100%;
 }
 
 .site-title {
     font-family: 'Oooh Baby', cursive;
-    font-size: 3rem; 
+    font-size: 2.5rem; /* Reduced from 3rem */
     color: #ffffff;
     white-space: nowrap;
 }
 
 .powered-by {
     font-family: 'Arial', sans-serif;
-    font-size: 1rem;
+    font-size: 0.9rem; /* Reduced from 1rem */
     text-transform: uppercase;
     letter-spacing: 0.03em;
     font-weight: normal;
@@ -119,7 +126,7 @@
 }
 
 .tmdb-logo {
-    height: 2.5rem;
+    height: 2rem; /* Reduced from 2.5rem */
     width: auto;
 }
 
@@ -139,27 +146,42 @@
 
 .auth-links {
     display: flex;
-    padding-right: 1rem;
+    padding-right: 0.5rem; /* Reduced padding */
+    flex-shrink: 0;
+    min-width: 50px; /* Reduced minimum width */
 }
 
 /* Responsive Styles */
 @media screen and (max-width: 1023px) {
     .site-title {
-        font-size: 2.3rem;
+        font-size: 2rem; /* Further reduced */
     }
     
     .powered-by {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
     }
     
     .tmdb-logo {
         height: 1.5rem;
     }
+
+    .navbar-brand {
+        padding-right: 50px; /* Adjust space reservation */
+    }
 }
 
 @media screen and (max-width: 768px) {
+    .navbar {
+        padding: 0.25rem 0.25rem;
+    }
+
+    .navbar-brand {
+        padding-left: 0.25rem;
+        padding-right: 45px; /* Adjust for smaller screens */
+    }
+
     .site-title {
-        font-size: 1.4rem;
+        font-size: 1.6rem; /* Smaller than before */
     }
     
     .powered-by {
@@ -170,54 +192,136 @@
         height: 0.9rem;
     }
 
-    .navbar {
-        padding: 0.5rem;
-    }
-
-    .nav-link {
-        font-size: 0.7rem;
-        padding: 0.5rem;
-    }
-
     .auth-links {
-        padding-right: 0.5rem;
+        padding-right: 0.25rem;
+        min-width: 40px;
     }
 
-    .user-icon {
-        width: 24px;
-        height: 24px;
+    .user-menu-container {
+        margin-right: 5px; /* Closer to edge */
+    }
+
+    .user-icon-wrapper {
+        padding: 0.4rem;
+    }
+
+    .hamburger-icon {
+        width: 20px;
+        height: 15px;
     }
 
     .dropdown-item {
         font-size: 0.9rem;
         padding: 0.4rem 0.8rem;
     }
+    
+    .dropdown-menu {
+        left: -90px;
+    }
 }
 
 @media screen and (max-width: 480px) {
+    .navbar {
+        padding: 0.25rem 0.25rem;
+    }
+
+    .navbar-brand {
+        padding-left: 0.25rem;
+        padding-right: 40px; /* More space for title */
+    }
+
     .site-title {
-        font-size: 1.5rem;
+        font-size: 1.3rem; /* Smaller for more space */
     }
 
     .powered-by {
-        font-size: 0.5rem;
+        font-size: 0.4rem;
     }
-
+    
     .tmdb-logo {
-        height: 1.1rem;
+        height: 0.8rem;
     }
 
-    .user-icon {
-        width: 20px;
-        height: 20px;
+    .auth-links {
+        padding-right: 0.25rem;
+        min-width: 35px;
+    }
+
+    .user-menu-container {
+        margin-right: 3px; /* Very close to edge */
+    }
+
+    .user-icon-wrapper {
+        padding: 0.3rem;
+    }
+
+    .hamburger-icon {
+        width: 18px;
+        height: 14px;
     }
 
     .dropdown-menu {
         min-width: 100px;
+        left: -95px;
     }
 
     .dropdown-item {
         font-size: 0.8rem;
         padding: 0.3rem 0.6rem;
+    }
+}
+
+/* Extra small screens */
+@media screen and (max-width: 360px) {
+    .navbar-brand {
+        padding-right: 35px; /* Maximum space for title */
+    }
+
+    .site-title {
+        font-size: 1.1rem; /* Even smaller */
+    }
+    
+    .powered-by {
+        font-size: 0.35rem;
+    }
+    
+    .tmdb-logo {
+        height: 0.7rem;
+    }
+
+    .site-title-container {
+        gap: 0.25rem;
+    }
+
+    .user-menu-container {
+        margin-right: 2px; /* Almost touching the edge */
+    }
+
+    .dropdown-menu {
+        left: -100px;
+    }
+}
+
+
+/* Very small screens - 526px and smaller */
+@media screen and (max-width: 526px) {
+    .site-title {
+        font-size: 1rem; /* Further reduced from 1.1rem */
+    }
+    
+    .powered-by {
+        font-size: 0.3rem; /* Further reduced */
+    }
+    
+    .tmdb-logo {
+        height: 0.6rem; /* Further reduced */
+    }
+
+    .navbar-brand {
+        padding-right: 38px; /* Slightly more space reservation */
+    }
+
+    .site-title-container {
+        gap: 0.2rem; /* Reduce gap even more */
     }
 }
