@@ -90,35 +90,56 @@ const tmdbAPI = {
   },
   
   // Search movies
-  searchMovies: async (query, page = 1) => {
-    try {
-      const response = await axios.get(`${BASE_URL}/search/movie`, {
+  // Search movies
+searchMovies: async (query, page = 1) => {
+  try {
+    // Calculate the two pages we need to fetch (similar to getPopularMovies)
+    const firstPage = page * 2 - 1;
+    const secondPage = page * 2;
+
+    // Make both API calls simultaneously
+    const [response1, response2] = await Promise.all([
+      axios.get(`${BASE_URL}/search/movie`, {
         params: {
           api_key: TMDB_API_KEY,
           query,
-          page
+          page: firstPage
         }
-      });
-  
-      return {
-        results: response.data.results.map(movie => ({
-          id: `tmdb-${movie.id}`, // Add this
-          title: movie.title,
-          description: movie.overview || '',
-          releaseYear: movie.release_date ? new Date(movie.release_date).getFullYear() : 0,
-          imageSrc: movie.poster_path ? `${IMAGE_BASE_URL}${movie.poster_path}` : '/default-movie-poster.jpg',
-          averageRating: (movie.vote_average / 2) || 0,
-          tmdbId: movie.id,
-          voteCount: movie.vote_count || 0
-        })),
-        total_pages: response.data.total_pages,
-        total_results: response.data.total_results
-      };
-    } catch (error) {
-      console.error('Error searching movies:', error);
-      throw error;
-    }
-  },
+      }),
+      axios.get(`${BASE_URL}/search/movie`, {
+        params: {
+          api_key: TMDB_API_KEY,
+          query,
+          page: secondPage
+        }
+      })
+    ]);
+
+    // Combine and map the results
+    const combinedResults = [
+      ...response1.data.results,
+      ...response2.data.results
+    ].map(movie => ({
+      id: `tmdb-${movie.id}`,
+      title: movie.title,
+      description: movie.overview || '',
+      releaseYear: movie.release_date ? new Date(movie.release_date).getFullYear() : 0,
+      imageSrc: movie.poster_path ? `${IMAGE_BASE_URL}${movie.poster_path}` : '/default-movie-poster.jpg',
+      averageRating: movie.vote_average || 0,
+      tmdbId: movie.id,
+      voteCount: movie.vote_count || 0
+    }));
+
+    return {
+      results: combinedResults,
+      total_pages: Math.ceil(response1.data.total_pages / 2), // Adjust total pages since we're combining two pages
+      total_results: response1.data.total_results
+    };
+  } catch (error) {
+    console.error('Error searching movies:', error);
+    throw error;
+  }
+},
 
   // Get movie recommendations
   getRecommendations: async (tmdbId, page = 1) => {

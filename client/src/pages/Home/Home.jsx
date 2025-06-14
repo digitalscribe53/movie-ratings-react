@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { gql } from '@apollo/client';
+import { useLocation, useNavigate } from 'react-router-dom';
 import MovieCard from '../../components/MovieCard/MovieCard';
 import Pagination from '../../components/Pagination/Pagination';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
@@ -50,6 +51,8 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   // Lazy query for search
   const [searchMovies, { loading: searchLoading, error: searchError, data: searchData }] = 
@@ -59,8 +62,35 @@ const Home = () => {
   const { loading: loadingMovies, error: moviesError, data: moviesData } = useQuery(GET_MOVIES, {
     variables: { page: currentPage },
     onError: (error) => console.error('GraphQL Error', error),
-    onCompleted: (data) => console.log('Query completed:', data)
+    onCompleted: (data) => console.log('Query completed:', data),
+    skip: isSearching // Skip this query when searching
   });  
+
+  // Initialize state from URL parameters on component mount
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchQuery = urlParams.get('search');
+    const page = urlParams.get('page');
+
+    if (searchQuery) {
+      setSearchTerm(searchQuery);
+      setIsSearching(true);
+      setCurrentPage(page ? parseInt(page) : 1);
+      
+      // Trigger the search with the URL parameters
+      searchMovies({ 
+        variables: { 
+          query: searchQuery, 
+          page: page ? parseInt(page) : 1 
+        } 
+      });
+    } else {
+      // Reset to default state if no search parameters
+      setSearchTerm('');
+      setIsSearching(false);
+      setCurrentPage(1);
+    }
+  }, [location.search, searchMovies]);
 
   const loading = loadingMovies || searchLoading;
   const error = moviesError || searchError;
@@ -79,19 +109,26 @@ const Home = () => {
     ? searchData?.searchMovies.totalPages 
     : 1; // Default to 1 for now since removed it from GET_MOVIES query
 
-
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!searchTerm.trim()) return;
 
-    setCurrentPage(1); // Reset to first page when searching
+    setCurrentPage(1);
     setIsSearching(true);
+    
+    // Update URL with search parameters
+    navigate(`/?search=${encodeURIComponent(searchTerm.trim())}&page=1`, { replace: true });
+    
     await searchMovies({ variables: { query: searchTerm.trim(), page: 1 } });
   };
 
   const handlePageChange = async (newPage) => {
     setCurrentPage(newPage);
+    
     if (isSearching) {
+      // Update URL with new page number
+      navigate(`/?search=${encodeURIComponent(searchTerm.trim())}&page=${newPage}`, { replace: true });
+      
       await searchMovies({ 
         variables: { 
           query: searchTerm.trim(),
@@ -105,62 +142,62 @@ const Home = () => {
   const handleClearSearch = () => {
     setSearchTerm('');
     setIsSearching(false);
+    setCurrentPage(1);
+    
+    // Clear URL parameters
+    navigate('/', { replace: true });
   };
-
-  
 
   return (
     <div className="home-container">
       {/* Hero Section with Search */}
-
-
-<div className="hero-banner">
-  <div className="container">
-    <form onSubmit={handleSearch} className="search-form">
-      <div className="field">
-        <div className="control has-icons-right">
-          <input 
-            className="input is-medium"
-            type="text"
-            placeholder="Search for movies..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <span 
-            className="icon is-right is-clickable" 
-            onClick={handleSearch}
-            style={{ pointerEvents: 'auto', cursor: 'pointer' }}
-          >
-            <img 
-              src="/images/static/magnifying-glass-icon.jpg" 
-              alt="Search" 
-              style={{ 
-                width: '24px', 
-                height: '24px', 
-                objectFit: 'contain' 
-              }} 
-            />
-          </span>
+      <div className="hero-banner">
+        <div className="container">
+          <form onSubmit={handleSearch} className="search-form">
+            <div className="field">
+              <div className="control has-icons-right">
+                <input 
+                  className="input is-medium"
+                  type="text"
+                  placeholder="Search for movies..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <span 
+                  className="icon is-right is-clickable" 
+                  onClick={handleSearch}
+                  style={{ pointerEvents: 'auto', cursor: 'pointer' }}
+                >
+                  <img 
+                    src="/images/static/magnifying-glass-icon.jpg" 
+                    alt="Search" 
+                    style={{ 
+                      width: '24px', 
+                      height: '24px', 
+                      objectFit: 'contain' 
+                    }} 
+                  />
+                </span>
+              </div>
+              {isSearching && (
+                <button 
+                  type="button" 
+                  className="button is-light is-small mt-2"
+                  onClick={handleClearSearch}
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+          </form>
         </div>
-        {isSearching && (
-          <button 
-            type="button" 
-            className="button is-light is-small mt-2"
-            onClick={handleClearSearch}
-          >
-            Clear
-          </button>
-        )}
       </div>
-    </form>
-  </div>
-</div>
   
       {/* Movies Grid */}
       <div className="movies-section" style={{ 
-  maxWidth: "1200px", 
-  margin: "0 auto"
-}}>
+        maxWidth: "1200px", 
+        margin: "0 auto"
+      }}>
         {loading ? (
           <LoadingSpinner message="Loading movies..." />
         ) : error ? (
@@ -186,11 +223,11 @@ const Home = () => {
                     Found {searchData?.searchMovies.totalResults} results for "{searchTerm}"
                   </p>
                 )}
-                  <div className="movies-grid-container">
-    {movies?.map((movie) => (
-      <MovieCard key={movie.id} movie={movie} />
-    ))}
-  </div>
+                <div className="movies-grid-container">
+                  {movies?.map((movie) => (
+                    <MovieCard key={movie.id} movie={movie} />
+                  ))}
+                </div>
                 {/* Pagination */}
                 {totalPages > 1 && (
                   <div className="pagination-wrapper mt-6">
@@ -209,4 +246,5 @@ const Home = () => {
     </div>
   );
 }
+
 export default Home;
