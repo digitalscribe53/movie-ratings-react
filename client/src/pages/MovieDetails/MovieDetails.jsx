@@ -107,6 +107,16 @@ const MovieDetails = () => {
     }
   });
   
+  // Scroll to review form function
+  const scrollToReviewForm = () => {
+    const reviewFormElement = document.getElementById('review-form-section');
+    if (reviewFormElement) {
+      reviewFormElement.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
 
   // Handler functions
   const handleEditClick = (review) => {
@@ -259,6 +269,14 @@ const MovieDetails = () => {
           ? `⭐ ${movie.averageRating.toFixed(1)}/10`
           : 'No ratings yet'}
                 </p>
+                {isLoggedIn && (
+                  <button 
+                    className="button is-primary is-small mt-2"
+                    onClick={scrollToReviewForm}
+                  >
+                    Rate or Add Your Review
+                  </button>
+                )}
               </div>
               {data.tmdbMovieDetails && (
                 <div className="tmdb-rating">
@@ -306,20 +324,21 @@ const MovieDetails = () => {
 
             {/* Local Reviews */}
             <div className="local-reviews mb-5">
-  <h3 className="subtitle is-4">Movie Ratings App Reviews</h3>
-  {movie.reviews && movie.reviews.length > 0 ? (
-    <div className="reviews-list">
-      {movie.reviews.map(review => renderReview(review))}
-    </div>
-  ) : (
-    <p>No reviews yet. Be the first to review!</p>
-  )}
-</div>
+              <h3 className="subtitle is-4">Movie Ratings App Reviews</h3>
+              {movie.reviews && movie.reviews.length > 0 ? (
+                <div className="reviews-list">
+                  {movie.reviews.map(review => renderReview(review))}
+                </div>
+              ) : (
+                <p>No reviews yet. Be the first to review!</p>
+              )}
+            </div>
 
             {/* Rating and Review Forms for logged-in users */}
             
             {isLoggedIn && (
-  <div className="user-interaction mb-5">
+  <div id="review-form-section" className="user-interaction mb-5">
+    <h3 className="subtitle is-4">Leave Your Rating and Review</h3>
     <div className="columns">
       <div className="column is-half">
         <RatingForm 

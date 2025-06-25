@@ -128,6 +128,25 @@
     gap: 0.5rem;
   }
 
+/* Local rating section with button */
+.local-rating {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Review form section styling */
+#review-form-section {
+  border-top: 2px solid #e1e1e1;
+  padding-top: 2rem;
+  margin-top: 2rem;
+}
+
+#review-form-section .subtitle {
+  color: #3273dc;
+  margin-bottom: 1.5rem;
+}
+
 /* Responsive styles */
 @media screen and (max-width: 1024px) {
   .movie-details .column.is-one-quarter {
@@ -209,6 +228,11 @@
       padding: 0.75rem;
       margin: 0 0 0.75rem 0;
   }
+
+  /* Mobile responsive adjustments */
+  .local-rating {
+    align-items: flex-start;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -259,5 +283,9 @@
       width: 100%;
       margin: 0 0 0.75rem 0;
       box-sizing: border-box;
+  }
+
+  .local-rating {
+    align-items: flex-start;
   }
 }
