@@ -66,6 +66,24 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+@media screen and (max-height: 600px) and (orientation: landscape) and (max-width: 950px) {
+    .movie-card {
+        max-width: 140px !important; /* Smaller cards to fit 4 screens */
+    }
+
+    .movie-card .title.is-5 {
+        font-size: 0.85rem;
+    }
+
+    .card-content {
+        padding: 0.4rem;
+    }
+
+    .rating {
+        font-size: 0.8rem; 
+    }
+}
+
 @media screen and (max-width: 768px) {
 
   .movie-card {

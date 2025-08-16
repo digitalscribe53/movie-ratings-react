@@ -221,6 +221,17 @@
   flex: none !important;
 }
 
+@media screen and (max-height: 600px) and (orientation: landscape) and (max-width: 950px) {
+    .movies-grid-container {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 0.25rem; /* Reduce gap slightly for better fit */
+    }
+
+    .movies-section {
+        padding: 0 4px; /* Reduce side padding */
+    }
+}
+
 @media screen and (max-width: 1023px) {
   .is-4-tablet {
     width: 33.33333%;
