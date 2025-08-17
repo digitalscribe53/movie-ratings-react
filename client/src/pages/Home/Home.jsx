@@ -15,7 +15,6 @@ const GET_MOVIES = gql`
       imageSrc
       averageRating
     }
-    
   }
 `;
 
@@ -54,17 +53,33 @@ const Home = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Load More functionality state
+  const [allMovies, setAllMovies] = useState([]); // Store all loaded movies
+  const [currentMoviePage, setCurrentMoviePage] = useState(1); // Track which page we're on for loading more
+  const [isLoadingMore, setIsLoadingMore] = useState(false); // Loading state for Load More button
+  const [hasMoreMovies, setHasMoreMovies] = useState(true); // Whether there are more movies to load
+  const [showBackToTop, setShowBackToTop] = useState(false); // Show back to top button
+
   // Lazy query for search
   const [searchMovies, { loading: searchLoading, error: searchError, data: searchData }] = 
     useLazyQuery(SEARCH_MOVIES);
 
+  // Lazy query for loading more movies
+  const [loadMoreMovies] = useLazyQuery(GET_MOVIES);
+
   // Query for initial movies
   const { loading: loadingMovies, error: moviesError, data: moviesData } = useQuery(GET_MOVIES, {
-    variables: { page: currentPage },
+    variables: { page: 1 },
     onError: (error) => console.error('GraphQL Error', error),
-    onCompleted: (data) => console.log('Query completed:', data),
-    skip: isSearching // Skip this query when searching
-  });  
+    onCompleted: (data) => {
+      console.log('Initial movies loaded:', data);
+      if (data?.movies) {
+        setAllMovies(data.movies);
+        setCurrentMoviePage(1);
+      }
+    },
+    skip: isSearching
+  });
 
   // Initialize state from URL parameters on component mount
   useEffect(() => {
@@ -94,20 +109,15 @@ const Home = () => {
 
   const loading = loadingMovies || searchLoading;
   const error = moviesError || searchError;
-  const movies = isSearching ? searchData?.searchMovies.movies : moviesData?.movies;
+  const movies = isSearching ? searchData?.searchMovies.movies : allMovies;
 
   const { data: userData } = useQuery(GET_ME, {
     fetchPolicy: 'network-only'
   });
 
-  console.log('isSearching:', isSearching);
-  console.log('moviesData:', moviesData);
-  console.log('searchData:', searchData);
-  console.log('Final movies array:', movies);
-
   const totalPages = isSearching 
     ? searchData?.searchMovies.totalPages 
-    : 1; // Default to 1 for now since removed it from GET_MOVIES query
+    : 1;
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -136,7 +146,7 @@ const Home = () => {
         } 
       });
     }
-    window.scrollTo(0, 0); // Scroll to top when page changes
+    window.scrollTo(0, 0);
   };
 
   const handleClearSearch = () => {
@@ -146,6 +156,47 @@ const Home = () => {
     
     // Clear URL parameters
     navigate('/', { replace: true });
+  };
+
+  // Load More functionality
+  const handleLoadMore = async () => {
+    if (isLoadingMore || !hasMoreMovies) return;
+
+    setIsLoadingMore(true);
+    const nextPage = currentMoviePage + 1;
+
+    try {
+      const { data } = await loadMoreMovies({
+        variables: { page: nextPage }
+      });
+
+      if (data?.movies && data.movies.length > 0) {
+        setAllMovies(prevMovies => [...prevMovies, ...data.movies]);
+        setCurrentMoviePage(nextPage);
+        
+        // Show back to top after first load more
+        if (!showBackToTop) {
+          setShowBackToTop(true);
+        }
+
+        // Check if we should show more - TMDB typically has many pages
+        // You can adjust this logic based on your needs
+        if (data.movies.length < 40) {
+          setHasMoreMovies(false);
+        }
+      } else {
+        setHasMoreMovies(false);
+      }
+    } catch (error) {
+      console.error('Error loading more movies:', error);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  };
+
+  // Back to top functionality
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -228,8 +279,25 @@ const Home = () => {
                     <MovieCard key={movie.id} movie={movie} />
                   ))}
                 </div>
-                {/* Pagination */}
-                {totalPages > 1 && (
+
+                {/* Load More Button - only show when not searching */}
+                {!isSearching && hasMoreMovies && (
+                  <div className="load-more-container">
+                    {isLoadingMore ? (
+                      <LoadingSpinner message="Loading more movies..." />
+                    ) : (
+                      <button 
+                        className="button is-primary is-medium load-more-button"
+                        onClick={handleLoadMore}
+                      >
+                        Load More Movies
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                {/* Pagination - only show when searching */}
+                {isSearching && totalPages > 1 && (
                   <div className="pagination-wrapper mt-6">
                     <Pagination
                       currentPage={currentPage}
@@ -243,6 +311,17 @@ const Home = () => {
           </>
         )}
       </div>
+
+      {/* Back to Top Button */}
+      {showBackToTop && (
+        <button 
+          className="back-to-top-button"
+          onClick={scrollToTop}
+          aria-label="Back to top"
+        >
+          ↑
+        </button>
+      )}
     </div>
   );
 }
